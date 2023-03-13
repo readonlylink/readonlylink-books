@@ -1,0 +1,26 @@
+{
+  "title": "REWORK",
+  "version": "0.0.2",
+  "authors": ["37signals"],
+  "translators": ["Olivia Han"],
+  "year": "2010",
+  "src": "src",
+  "contents": [
+    "00.0.md",
+    "00.9.md",
+    "01.md",
+    "02.md",
+    "03.md",
+    "04.md",
+    "05.md",
+    "06.md",
+    "07.md",
+    "08.md",
+    "09.md",
+    "10.md",
+    "11.md",
+    "12.md",
+    "13.md",
+    "14.md"
+  ]
+}
