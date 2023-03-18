@@ -1,4 +1,5 @@
 {
+  "kind": "Book",
   "title": "REWORK",
   "version": "0.0.2",
   "authors": ["37signals"],
