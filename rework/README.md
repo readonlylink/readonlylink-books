@@ -1,7 +1,7 @@
 # REWORK
 
 [ [原仓库](https://github.com/livid/rework)
-| [只读链接](https://readonly.link/books/github.com/xieyuheng/rework) ]
+| [只读链接](https://readonly.link/books/https://readonlylink-books.netlify.app/rework/book.json) ]
 
 这是一本来自 [37signals](http://www.37signals.com/) 的关于商业和创意执行的书，由 [OLIVIDA](http://www.olivida.com/) 翻译。
 
