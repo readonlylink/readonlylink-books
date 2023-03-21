@@ -2,7 +2,7 @@
 title: The ØMQ Guide
 ---
 
-![logo](https://readonlylink-books.netlify.app/zguide/images/logo.gif)
+![logo](../images/logo.gif)
 
 - Ø Explains how to use [ØMQ](http://www.zeromq.com).
 - Ø Covers basic, intermediate and advanced use.
