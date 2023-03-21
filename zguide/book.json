@@ -7,6 +7,8 @@
   "date": "2013-03-11",
   "src": "src",
   "contents": [
+    "frontispiece.md",
+    "dedication.md",
     "dedication.md",
     "preface.md",
     "part1.md",
