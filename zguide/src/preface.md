@@ -4,7 +4,7 @@ title: Preface
 
 ## ZeroMQ in a Hundred Words
 
-ZeroMQ (also known as 0MQ, 0\MQ, or zmq) looks like an embeddable
+ZeroMQ (also known as ØMQ, 0MQ, or zmq) looks like an embeddable
 networking library but acts like a concurrency framework. It gives you
 sockets that carry atomic messages across various transports like
 in-process, inter-process, TCP, and multicast. You can connect sockets
@@ -13,7 +13,7 @@ request-reply. It's fast enough to be the fabric for clustered
 products. Its asynchronous I/O model gives you scalable multicore
 applications, built as asynchronous message-processing tasks. It has a
 score of language APIs and runs on most operating systems. ZeroMQ is
-from [http://www.imatix.com iMatix] and is LGPLv3 open source.
+from [iMatix](http://www.imatix.com) and is LGPLv3 open source.
 
 ## How It Began
 
@@ -21,14 +21,14 @@ We took a normal TCP socket, injected it with a mix of radioactive
 isotopes stolen from a secret Soviet atomic research project,
 bombarded it with 1950-era cosmic rays, and put it into the hands of a
 drug-addled comic book author with a badly-disguised fetish for
-bulging muscles clad in spandex[figure]. Yes, ZeroMQ sockets are the
+bulging muscles clad in spandex. Yes, ZeroMQ sockets are the
 world-saving superheroes of the networking world.
 
 ## The Zen of Zero
 
 **Figure 1 - A terrible accident...**
 
-```textdiagram
+```plaintext
 .------------.        .-------------.
 |            |        |             |
 | TCP socket +------->|   ZeroMQ    | ZAP!
@@ -49,8 +49,8 @@ world-saving superheroes of the networking world.
 The Ø in ZeroMQ is all about tradeoffs. On the one hand this strange
 name lowers ZeroMQ's visibility on Google and Twitter. On the other
 hand it annoys the heck out of some Danish folk who write us things
-like "ØMG røtfl", and "Ø is not a funny looking zero!" and "//Rødgrød
-med fløde!//", which is apparently an insult that means "may your
+like "ØMG røtfl", and "Ø is not a funny looking zero!" and "_Rødgrød
+med fløde!_", which is apparently an insult that means "may your
 neighbours be the direct descendants of Grendel!"  Seems like a fair
 trade.
 
@@ -113,7 +113,7 @@ But the goal of the ZeroMQ book was, from the start, a printed
 work. So it was exciting to get an email from Bill Lubanovic in
 January 2012 introducing me to his editor, Andy Oram, at O'Reilly,
 suggesting a ZeroMQ book. Of course! Where do I sign? How much do I
-have to pay? Oh, I //get money// for this? All I have to do is finish
+have to pay? Oh, I _get money_ for this? All I have to do is finish
 it?
 
 Of course as soon as O'Reilly announced a ZeroMQ book, other
