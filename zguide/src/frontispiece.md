@@ -12,6 +12,8 @@ title: The ØMQ Guide
 - Ø Written by Pieter Hintjens, CEO of iMatix, and 100+ contributors.
 - Ø Available in paper from [O'Reilly](http://shop.oreilly.com/product/0636920026136.do).
 
-Source code if this Readonly.Link rendering is at [GitHub](https://github.com/readonlylink/readonlylink-books/tree/master/zguide).
+Upstream of this rendering is at [github.com/booksbyus/zguide](https://github.com/booksbyus/zguide).
+
+Source code of this Readonly.Link rendering is at [github.com/readonlylink/readonlylink-books](https://github.com/readonlylink/readonlylink-books/tree/master/zguide).
 
 Welcome to give feedback :)
