@@ -38,4 +38,4 @@ All contributions to the Guide example source code is governed by the [C4 proces
 
 ## Thanks
 
-Thanks to all the contributors, listed in CONTRIBUTORS.
+Thanks to all the contributors, listed in [CONTRIBUTORS](CONTRIBUTORS).
