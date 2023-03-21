@@ -1,8 +1,5 @@
 add image to cover
 
-part1
-part2
-
 chapter2
 chapter3
 chapter4
