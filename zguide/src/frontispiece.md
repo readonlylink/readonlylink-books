@@ -1,10 +1,8 @@
 ---
-title: ØMQ - The Guide
+title: The ØMQ Guide
 ---
 
 ![logo](https://readonlylink-books.netlify.app/zguide/images/logo.gif)
-
-**The Greate ØMQ Guide** `\zguide\`:
 
 - Ø Explains how to use [ØMQ](http://www.zeromq.com).
 - Ø Covers basic, intermediate and advanced use.
@@ -13,8 +11,6 @@ title: ØMQ - The Guide
 - Ø Updated and revised for ZeroMQ/3.2 ([older text for ZeroMQ/2.2 still available](http://zguide2.zeromq.org)).
 - Ø Written by Pieter Hintjens, CEO of iMatix, and 100+ contributors.
 - Ø Available in paper from [O'Reilly](http://shop.oreilly.com/product/0636920026136.do).
-
-------
 
 Source code if this Readonly.Link rendering is at [GitHub](https://github.com/readonlylink/readonlylink-books/tree/master/zguide).
 
