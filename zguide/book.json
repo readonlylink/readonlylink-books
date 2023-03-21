@@ -1,0 +1,10 @@
+{
+  "kind": "Book",
+  "title": "ZeroMQ",
+  "subtitle": "Messaging for Many Applications",
+  "version": "0.0.1",
+  "authors": ["Pieter Hintjens"],
+  "date": "2013-03-11",
+  "src": "src",
+  "contents": []
+}
