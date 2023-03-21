@@ -6,11 +6,11 @@ title: Chapter 1 - Basics
 
 How to explain ZeroMQ? Some of us start by saying all the wonderful
 things it does. _It's sockets on steroids. It's like mailboxes with
-routing. It's fast!_  Others try to share their moment of
+routing. It's fast!_ Others try to share their moment of
 enlightenment, that zap-pow-kaboom satori paradigm-shift moment when
 it all became obvious. _Things just become simpler. Complexity goes
-away. It opens the mind._  Others try to explain by comparison. _It's
-smaller, simpler, but still looks familiar._  Personally, I like to
+away. It opens the mind._ Others try to explain by comparison. _It's
+smaller, simpler, but still looks familiar._ Personally, I like to
 remember why we made ZeroMQ at all, because that's most likely where
 you, the reader, still are today.
 
@@ -155,8 +155,8 @@ int main (void)
 }
 ```
 
-
 **Figure 2 - Request-Reply**
+
 ```
   #------------#
   |   Client   |
@@ -231,7 +231,8 @@ reads the reply back from the server.
 If you kill the server (Ctrl-C) and restart it, the client won't
 recover properly. Recovering from crashing processes isn't quite that
 easy. Making a reliable request-reply flow is complex enough that we
-won't cover it until [#reliable-request-reply].
+won't cover it until [Chapter 4 - Reliable Request-Reply
+Patterns](chapter4.md).
 
 There is a lot happening behind the scenes but what matters to us
 programmers is how short and sweet the code is, and how often it
@@ -510,8 +511,8 @@ going to explain it in detail. Remember that ZeroMQ does asynchronous
 I/O, i.e., in the background. Say you have two nodes doing this, in
 this order:
 
-* Subscriber connects to an endpoint and receives and counts messages.
-* Publisher binds to an endpoint and immediately sends 1,000 messages.
+- Subscriber connects to an endpoint and receives and counts messages.
+- Publisher binds to an endpoint and immediately sends 1,000 messages.
 
 Then the subscriber will most likely not receive anything. You'll
 blink, check that you set a correct filter and try again, and the
@@ -525,14 +526,14 @@ that same link can handle 1M messages per second. During the 5 msecs
 that the subscriber is connecting to the publisher, it takes the
 publisher only 1 msec to send out those 1K messages.
 
-In [#sockets-and-patterns] we'll explain how to synchronize a
-publisher and subscribers so that you don't start to publish data
-until the subscribers really are connected and ready. There is a
-simple and stupid way to delay the publisher, which is to sleep. Don't
-do this in a real application, though, because it is extremely fragile
-as well as inelegant and slow. Use sleeps to prove to yourself what's
-happening, and then wait for [#sockets-and-patterns] to see how to do
-this right.
+In [Chapter 2 - Sockets and Patterns](chapter2.md) we'll explain how
+to synchronize a publisher and subscribers so that you don't start to
+publish data until the subscribers really are connected and
+ready. There is a simple and stupid way to delay the publisher, which
+is to sleep. Don't do this in a real application, though, because it
+is extremely fragile as well as inelegant and slow. Use sleeps to
+prove to yourself what's happening, and then wait for [Chapter 2 -
+Sockets and Patterns](chapter2.md) to see how to do this right.
 
 The alternative to synchronization is to simply assume that the
 published data stream is infinite and has no start and no end. One
@@ -549,18 +550,18 @@ calculates the average, prints it, and exits.
 
 Some points about the publish-subscribe (pub-sub) pattern:
 
-* A subscriber can connect to more than one publisher, using one
+- A subscriber can connect to more than one publisher, using one
   connect call each time. Data will then arrive and be interleaved
   ("fair-queued") so that no single publisher drowns out the others.
 
-* If a publisher has no connected subscribers, then it will simply
+- If a publisher has no connected subscribers, then it will simply
   drop all messages.
 
-* If you're using TCP and a subscriber is slow, messages will queue up
+- If you're using TCP and a subscriber is slow, messages will queue up
   on the publisher. We'll look at how to protect publishers against
   this using the "high-water mark" later.
 
-* From ZeroMQ v3.x, filtering happens at the publisher side when using
+- From ZeroMQ v3.x, filtering happens at the publisher side when using
   a connected protocol (`tcp:@<//>@` or `ipc:@<//>@`). Using the
   `epgm:@<//>@` protocol, filtering happens at the subscriber side. In
   ZeroMQ v2.x, all filtering happened at the subscriber side.
@@ -620,9 +621,9 @@ abstractive norms), let's do a little supercomputing. Then coffee. Our
 supercomputing application is a fairly typical parallel processing
 model. We have:
 
-* A ventilator that produces tasks that can be done in parallel
-* A set of workers that process tasks
-* A sink that collects results back from the worker processes
+- A ventilator that produces tasks that can be done in parallel
+- A set of workers that process tasks
+- A sink that collects results back from the worker processes
 
 In reality, workers run on superfast boxes, perhaps using GPUs
 (graphic processing units) to do the hard math. Here is the
@@ -774,20 +775,20 @@ int main (void)
 The average cost of a batch is 5 seconds. When we start 1, 2, or 4
 workers we get results like this from the sink:
 
-* 1 worker: total elapsed time: 5034 msecs.
-* 2 workers: total elapsed time: 2421 msecs.
-* 4 workers: total elapsed time: 1018 msecs.
+- 1 worker: total elapsed time: 5034 msecs.
+- 2 workers: total elapsed time: 2421 msecs.
+- 4 workers: total elapsed time: 1018 msecs.
 
 Let's look at some aspects of this code in more detail:
 
-* The workers connect upstream to the ventilator, and downstream to
+- The workers connect upstream to the ventilator, and downstream to
   the sink. This means you can add workers arbitrarily. If the workers
   bound to their endpoints, you would need (a) more endpoints and (b)
   to modify the ventilator and/or the sink each time you added a
   worker. We say that the ventilator and sink are _stable_ parts of
   our architecture and the workers are _dynamic_ parts of it.
 
-* We have to synchronize the start of the batch with all workers being
+- We have to synchronize the start of the batch with all workers being
   up and running. This is a fairly common gotcha in ZeroMQ and there
   is no easy solution. The `zmq_connect` method takes a certain
   time. So when a set of workers connect to the ventilator, the first
@@ -797,12 +798,12 @@ Let's look at some aspects of this code in more detail:
   parallel at all. Try removing the wait in the ventilator, and see
   what happens.
 
-* The ventilator's PUSH socket distributes tasks to workers (assuming
+- The ventilator's PUSH socket distributes tasks to workers (assuming
   they are all connected _before_ the batch starts going out)
   evenly. This is called _load balancing_ and it's something we'll
   look at again in more detail.
 
-* The sink's PULL socket collects results from workers evenly. This is
+- The sink's PULL socket collects results from workers evenly. This is
   called _fair-queuing_.
 
 **Figure 6 - Fair Queuing**
@@ -832,7 +833,7 @@ messages than the others, it's because that PULL socket has joined
 faster than the others, and grabs a lot of messages before the others
 manage to connect. If you want proper load balancing, you probably
 want to look at the load balancing pattern in
-[#advanced-request-reply].
+[Chapter 3 - Advanced Request-Reply Patterns](chapter3.md).
 
 ## Programming with ZeroMQ
 
@@ -841,11 +842,11 @@ some apps. Before you start that, take a deep breath, chillax, and
 reflect on some basic advice that will save you much stress and
 confusion.
 
-* Learn ZeroMQ step-by-step. It's just one simple API, but it hides a
+- Learn ZeroMQ step-by-step. It's just one simple API, but it hides a
   world of possibilities. Take the possibilities slowly and master
   each one.
 
-* Write nice code. Ugly code hides problems and makes it hard for
+- Write nice code. Ugly code hides problems and makes it hard for
   others to help you. You might get used to meaningless variable
   names, but people reading your code won't. Use names that are real
   words, that say something other than "I'm too careless to tell you
@@ -853,16 +854,16 @@ confusion.
   clean layout. Write nice code and your world will be more
   comfortable.
 
-* Test what you make as you make it. When your program doesn't work,
+- Test what you make as you make it. When your program doesn't work,
   you should know what five lines are to blame. This is especially
   true when you do ZeroMQ magic, which just _won't_ work the first few
   times you try it.
 
-* When you find that things don't work as expected, break your code
+- When you find that things don't work as expected, break your code
   into pieces, test each one, see which one is not working. ZeroMQ
   lets you make essentially modular code; use that to your advantage.
 
-* Make abstractions (classes, methods, whatever) as you need them. If
+- Make abstractions (classes, methods, whatever) as you need them. If
   you copy/paste a lot of code, you're going to copy/paste errors,
   too.
 
@@ -906,17 +907,17 @@ before closing them.
 The ZeroMQ objects we need to worry about are messages, sockets, and
 contexts. Luckily it's quite simple, at least in simple programs:
 
-* Use `zmq_send[3]` and `zmq_recv[3]` when you can, as it avoids the
+- Use `zmq_send[3]` and `zmq_recv[3]` when you can, as it avoids the
   need to work with zmq_msg_t objects.
 
-* If you do use `zmq_msg_recv[3]`, always release the received message
+- If you do use `zmq_msg_recv[3]`, always release the received message
   as soon as you're done with it, by calling `zmq_msg_close[3]`.
 
-* If you are opening and closing a lot of sockets, that's probably a
+- If you are opening and closing a lot of sockets, that's probably a
   sign that you need to redesign your application. In some cases
   socket handles won't be freed until you destroy the context.
 
-* When you exit the program, close your sockets and then call
+- When you exit the program, close your sockets and then call
   `zmq_ctx_destroy[3]`. This destroys the context.
 
 This is at least the case for C development. In a language with
@@ -966,53 +967,53 @@ Let's look at the typical problems we face when we start to connect
 pieces using raw TCP. Any reusable messaging layer would need to solve
 all or most of these:
 
-* How do we handle I/O? Does our application block, or do we handle
+- How do we handle I/O? Does our application block, or do we handle
   I/O in the background? This is a key design decision. Blocking I/O
   creates architectures that do not scale well. But background I/O can
   be very hard to do right.
 
-* How do we handle dynamic components, i.e., pieces that go away
+- How do we handle dynamic components, i.e., pieces that go away
   temporarily? Do we formally split components into "clients" and
   "servers" and mandate that servers cannot disappear? What then if we
   want to connect servers to servers? Do we try to reconnect every few
   seconds?
 
-* How do we represent a message on the wire? How do we frame data so
+- How do we represent a message on the wire? How do we frame data so
   it's easy to write and read, safe from buffer overflows, efficient
   for small messages, yet adequate for the very largest videos of
   dancing cats wearing party hats?
 
-* How do we handle messages that we can't deliver immediately?
+- How do we handle messages that we can't deliver immediately?
   Particularly, if we're waiting for a component to come back online?
   Do we discard messages, put them into a database, or into a memory
   queue?
 
-* Where do we store message queues? What happens if the component
+- Where do we store message queues? What happens if the component
   reading from a queue is very slow and causes our queues to build up?
   What's our strategy then?
 
-* How do we handle lost messages? Do we wait for fresh data, request a
+- How do we handle lost messages? Do we wait for fresh data, request a
   resend, or do we build some kind of reliability layer that ensures
   messages cannot be lost? What if that layer itself crashes?
 
-* What if we need to use a different network transport. Say, multicast
+- What if we need to use a different network transport. Say, multicast
   instead of TCP unicast? Or IPv6? Do we need to rewrite the
   applications, or is the transport abstracted in some layer?
 
-* How do we route messages? Can we send the same message to multiple
+- How do we route messages? Can we send the same message to multiple
   peers? Can we send replies back to an original requester?
 
-* How do we write an API for another language? Do we re-implement a
+- How do we write an API for another language? Do we re-implement a
   wire-level protocol or do we repackage a library? If the former, how
   can we guarantee efficient and stable stacks? If the latter, how can
   we guarantee interoperability?
 
-* How do we represent data so that it can be read between different
+- How do we represent data so that it can be read between different
   architectures? Do we enforce a particular encoding for data types?
   How far is this the job of the messaging system rather than a higher
   layer?
 
-* How do we handle network errors? Do we wait and retry, ignore them
+- How do we handle network errors? Do we wait and retry, ignore them
   silently, or abort?
 
 Take a typical open source project like [Hadoop
@@ -1136,53 +1137,53 @@ network, without much cost.
 
 Specifically:
 
-* It handles I/O asynchronously, in background threads. These
+- It handles I/O asynchronously, in background threads. These
   communicate with application threads using lock-free data
   structures, so concurrent ZeroMQ applications need no locks,
   semaphores, or other wait states.
 
-* Components can come and go dynamically and ZeroMQ will automatically
+- Components can come and go dynamically and ZeroMQ will automatically
   reconnect. This means you can start components in any order. You can
   create "service-oriented architectures" (SOAs) where services can
   join and leave the network at any time.
 
-* It queues messages automatically when needed. It does this
+- It queues messages automatically when needed. It does this
   intelligently, pushing messages as close as possible to the receiver
   before queuing them.
 
-* It has ways of dealing with over-full queues (called "high water
+- It has ways of dealing with over-full queues (called "high water
   mark"). When a queue is full, ZeroMQ automatically blocks senders,
   or throws away messages, depending on the kind of messaging you are
   doing (the so-called "pattern").
 
-* It lets your applications talk to each other over arbitrary
+- It lets your applications talk to each other over arbitrary
   transports: TCP, multicast, in-process, inter-process. You don't
   need to change your code to use a different transport.
 
-* It handles slow/blocked readers safely, using different strategies
+- It handles slow/blocked readers safely, using different strategies
   that depend on the messaging pattern.
 
-* It lets you route messages using a variety of patterns such as
+- It lets you route messages using a variety of patterns such as
   request-reply and pub-sub. These patterns are how you create the
   topology, the structure of your network.
 
-* It lets you create proxies to queue, forward, or capture messages
+- It lets you create proxies to queue, forward, or capture messages
   with a single call. Proxies can reduce the interconnection
   complexity of a network.
 
-* It delivers whole messages exactly as they were sent, using a simple
+- It delivers whole messages exactly as they were sent, using a simple
   framing on the wire. If you write a 10k message, you will receive a
   10k message.
 
-* It does not impose any format on messages. They are blobs from zero
+- It does not impose any format on messages. They are blobs from zero
   to gigabytes large. When you want to represent data you choose some
   other product on top, such as msgpack, Google's protocol buffers,
   and others.
 
-* It handles network errors intelligently, by retrying automatically
+- It handles network errors intelligently, by retrying automatically
   in cases where it makes sense.
 
-* It reduces your carbon footprint. Doing more with less CPU means
+- It reduces your carbon footprint. Doing more with less CPU means
   your boxes use less power, and you can keep your old boxes in use
   for longer. Al Gore would love ZeroMQ.
 
@@ -1239,12 +1240,12 @@ squeezing more juice out of your CPU.
 
 These changes don't impact existing application code directly:
 
-* Pub-sub filtering is now done at the publisher side instead of
+- Pub-sub filtering is now done at the publisher side instead of
   subscriber side. This improves performance significantly in many
   pub-sub use cases. You can mix v3.2 and v2.1/v2.2 publishers and
   subscribers safely.
 
-* ZeroMQ v3.2 has many new API methods (`zmq_disconnect[3]`,
+- ZeroMQ v3.2 has many new API methods (`zmq_disconnect[3]`,
   `zmq_unbind[3]`, `zmq_monitor[3]`, `zmq_ctx_set[3]`, etc.)
 
 ### Incompatible Changes
@@ -1252,32 +1253,32 @@ These changes don't impact existing application code directly:
 These are the main areas of impact on applications and language
 bindings:
 
-* Changed send/recv methods: `zmq_send[3]` and `zmq_recv[3]` have a
+- Changed send/recv methods: `zmq_send[3]` and `zmq_recv[3]` have a
   different, simpler interface, and the old functionality is now
   provided by `zmq_msg_send[3]` and `zmq_msg_recv[3]`. Symptom:
   compile errors. Solution: fix up your code.
 
-* These two methods return positive values on success, and -1 on
+- These two methods return positive values on success, and -1 on
   error. In v2.x they always returned zero on success. Symptom:
   apparent errors when things actually work fine. Solution: test
   strictly for return code = -1, not non-zero.
 
-* `zmq_poll[3]` now waits for milliseconds, not microseconds. Symptom:
+- `zmq_poll[3]` now waits for milliseconds, not microseconds. Symptom:
   application stops responding (in fact responds 1000 times
   slower). Solution: use the `ZMQ_POLL_MSEC` macro defined below, in
   all `zmq_poll` calls.
 
-* `ZMQ_NOBLOCK` is now called `ZMQ_DONTWAIT`. Symptom: compile
+- `ZMQ_NOBLOCK` is now called `ZMQ_DONTWAIT`. Symptom: compile
   failures on the `ZMQ_NOBLOCK` macro.
 
-* The `ZMQ_HWM` socket option is now broken into `ZMQ_SNDHWM` and
-  `ZMQ_RCVHWM`.  Symptom: compile failures on the `ZMQ_HWM` macro.
+- The `ZMQ_HWM` socket option is now broken into `ZMQ_SNDHWM` and
+  `ZMQ_RCVHWM`. Symptom: compile failures on the `ZMQ_HWM` macro.
 
-* Most but not all `zmq_getsockopt[3]` options are now integer
+- Most but not all `zmq_getsockopt[3]` options are now integer
   values. Symptom: runtime error returns on `zmq_setsockopt` and
   `zmq_getsockopt`.
 
-* The `ZMQ_SWAP` option has been removed. Symptom: compile failures on
+- The `ZMQ_SWAP` option has been removed. Symptom: compile failures on
   `ZMQ_SWAP`. Solution: redesign any code that uses this
   functionality.
 
