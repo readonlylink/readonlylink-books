@@ -176,11 +176,11 @@ Hello |    | World
 ```
 
 The REQ-REP socket pair is in lockstep. The client issues
-`zmq_send[3]` and then `zmq_recv[3]`, in a loop (or once if that's all
+`zmq_send` and then `zmq_recv`, in a loop (or once if that's all
 it needs). Doing any other sequence (e.g., sending two messages in a
 row) will result in a return code of -1 from the `send` or `recv`
-call. Similarly, the service issues `zmq_recv[3]` and then
-`zmq_send[3]` in that order, as often as it needs to.
+call. Similarly, the service issues `zmq_recv` and then
+`zmq_send` in that order, as often as it needs to.
 
 Here's the client code:
 
@@ -478,20 +478,20 @@ int main (int argc, char *argv [])
 ```
 
 Note that when you use a SUB socket you **must** set a subscription
-using `zmq_setsockopt[3]` and SUBSCRIBE, as in this code. If you don't
+using `zmq_setsockopt` and SUBSCRIBE, as in this code. If you don't
 set any subscription, you won't get any messages. It's a common
 mistake for beginners. The subscriber can set many subscriptions,
 which are added together. That is, if an update matches ANY
 subscription, the subscriber receives it. The subscriber can also
 cancel specific subscriptions. A subscription is often, but not
-always, a printable string. See `zmq_setsockopt[3]` for how this
+always, a printable string. See `zmq_setsockopt` for how this
 works.
 
 The PUB-SUB socket pair is asynchronous. The client does
-`zmq_recv[3]`, in a loop (or once if that's all it needs). Trying to
+`zmq_recv`, in a loop (or once if that's all it needs). Trying to
 send a message to a SUB socket will cause an error. Similarly, the
-service does `zmq_send[3]` as often as it needs to, but must not do
-`zmq_recv[3]` on a PUB socket.
+service does `zmq_send` as often as it needs to, but must not do
+`zmq_recv` on a PUB socket.
 
 In theory with ZeroMQ sockets, it does not matter which end connects
 and which end binds. However, in practice there are undocumented
@@ -870,7 +870,7 @@ confusion.
 ### Getting the Context Right
 
 ZeroMQ applications always start by creating a _context_, and then
-using that for creating sockets. In C, it's the `zmq_ctx_new[3]`
+using that for creating sockets. In C, it's the `zmq_ctx_new`
 call. You should create and use exactly one context in your
 process. Technically, the context is the container for all sockets in
 a single process, and acts as the transport for `inproc` sockets,
@@ -879,10 +879,10 @@ runtime a process has two contexts, these are like separate ZeroMQ
 instances. If that's explicitly what you want, OK, but otherwise
 remember:
 
-**Call `zmq_ctx_new[3]` once at the start of a process, and
-`zmq_ctx_destroy[3]` once at the end.**
+**Call `zmq_ctx_new` once at the start of a process, and
+`zmq_ctx_destroy` once at the end.**
 
-If you're using the `fork()` system call, do `zmq_ctx_new[3]` _after_
+If you're using the `fork()` system call, do `zmq_ctx_new` _after_
 the fork and at the beginning of the child process code. In general,
 you want to do interesting (ZeroMQ) stuff in the children, and boring
 process management in the parent.
@@ -898,27 +898,27 @@ karma.
 
 Memory leaks are one thing, but ZeroMQ is quite finicky about how you
 exit an application. The reasons are technical and painful, but the
-upshot is that if you leave any sockets open, the `zmq_ctx_destroy[3]`
+upshot is that if you leave any sockets open, the `zmq_ctx_destroy`
 function will hang forever. And even if you close all sockets,
-`zmq_ctx_destroy[3]` will by default wait forever if there are pending
+`zmq_ctx_destroy` will by default wait forever if there are pending
 connects or sends unless you set the LINGER to zero on those sockets
 before closing them.
 
 The ZeroMQ objects we need to worry about are messages, sockets, and
 contexts. Luckily it's quite simple, at least in simple programs:
 
-- Use `zmq_send[3]` and `zmq_recv[3]` when you can, as it avoids the
+- Use `zmq_send` and `zmq_recv` when you can, as it avoids the
   need to work with zmq_msg_t objects.
 
-- If you do use `zmq_msg_recv[3]`, always release the received message
-  as soon as you're done with it, by calling `zmq_msg_close[3]`.
+- If you do use `zmq_msg_recv`, always release the received message
+  as soon as you're done with it, by calling `zmq_msg_close`.
 
 - If you are opening and closing a lot of sockets, that's probably a
   sign that you need to redesign your application. In some cases
   socket handles won't be freed until you destroy the context.
 
 - When you exit the program, close your sockets and then call
-  `zmq_ctx_destroy[3]`. This destroys the context.
+  `zmq_ctx_destroy`. This destroys the context.
 
 This is at least the case for C development. In a language with
 automatic object destruction, sockets and contexts will be destroyed
@@ -1189,8 +1189,8 @@ Specifically:
 
 Actually ZeroMQ does rather more than this. It has a subversive effect
 on how you develop network-capable applications. Superficially, it's a
-socket-inspired API on which you do `zmq_recv[3]` and
-`zmq_send[3]`. But message processing rapidly becomes the central
+socket-inspired API on which you do `zmq_recv` and
+`zmq_send`. But message processing rapidly becomes the central
 loop, and your application soon breaks down into a set of message
 processing tasks. It is elegant and natural. And it scales: each of
 these tasks maps to a node, and the nodes talk to each other across
@@ -1245,17 +1245,17 @@ These changes don't impact existing application code directly:
   pub-sub use cases. You can mix v3.2 and v2.1/v2.2 publishers and
   subscribers safely.
 
-- ZeroMQ v3.2 has many new API methods (`zmq_disconnect[3]`,
-  `zmq_unbind[3]`, `zmq_monitor[3]`, `zmq_ctx_set[3]`, etc.)
+- ZeroMQ v3.2 has many new API methods (`zmq_disconnect`,
+  `zmq_unbind`, `zmq_monitor`, `zmq_ctx_set`, etc.)
 
 ### Incompatible Changes
 
 These are the main areas of impact on applications and language
 bindings:
 
-- Changed send/recv methods: `zmq_send[3]` and `zmq_recv[3]` have a
+- Changed send/recv methods: `zmq_send` and `zmq_recv` have a
   different, simpler interface, and the old functionality is now
-  provided by `zmq_msg_send[3]` and `zmq_msg_recv[3]`. Symptom:
+  provided by `zmq_msg_send` and `zmq_msg_recv`. Symptom:
   compile errors. Solution: fix up your code.
 
 - These two methods return positive values on success, and -1 on
@@ -1263,7 +1263,7 @@ bindings:
   apparent errors when things actually work fine. Solution: test
   strictly for return code = -1, not non-zero.
 
-- `zmq_poll[3]` now waits for milliseconds, not microseconds. Symptom:
+- `zmq_poll` now waits for milliseconds, not microseconds. Symptom:
   application stops responding (in fact responds 1000 times
   slower). Solution: use the `ZMQ_POLL_MSEC` macro defined below, in
   all `zmq_poll` calls.
@@ -1274,7 +1274,7 @@ bindings:
 - The `ZMQ_HWM` socket option is now broken into `ZMQ_SNDHWM` and
   `ZMQ_RCVHWM`. Symptom: compile failures on the `ZMQ_HWM` macro.
 
-- Most but not all `zmq_getsockopt[3]` options are now integer
+- Most but not all `zmq_getsockopt` options are now integer
   values. Symptom: runtime error returns on `zmq_setsockopt` and
   `zmq_getsockopt`.
 
