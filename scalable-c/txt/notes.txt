@@ -1,0 +1,100 @@
+
+# CLASS Approach
+    why and how
+    basic patterns
+        taken from RFC (update as needed)
+    advanced patterns
+    generic containers
+        zlist, zhash
+    advanced containers
+        zlistx, zhashx
+    basic types
+        zchunk
+
+# Packaging
+    zproject
+        what it produces
+        how to use it
+    - bindings
+    - builds
+    - model language
+    - building hello for every platform
+        indeed unto Android :)
+    - SBOM
+
+# Using ZeroMQ
+    what it does, and how
+    ping pong example
+        break it down
+        client, server
+        strings
+        connect, bind
+    weather example
+        break it down
+        pub, sub
+    zsock, zstr, zmsg, zframe
+
+# Actor-Based Concurrency
+    why and how it works
+    hello actor example
+        break it down
+    zsock_send, zsock_recv
+    zpoller
+
+# Layered Portability
+    principles of abstraction
+    zproject
+    zbeacon, zproc, zsys
+    ziflist, zclock, zuuid
+    zdir, zfile
+
+# Security and Encryption
+    ZeroMQ's security model
+    PLAIN security mechanism
+    CURVE security mechanism
+    security examples
+    zauth, zcert, zcertstore
+
+# Scalable Servers and Clients
+    zproto for clients and servers
+    state machine model
+    examples
+    client timeouts
+    heartbeating
+    break down the full FSM
+    wrap the client API
+
+# Clustering
+    zyre for group clustering
+
+# Basics of Code Generation
+    gsl
+    examples
+    quick reference
+
+# Rules of API Design
+    minimal
+    extensible
+    consistent
+    testable
+    portable
+
+# Further Reading
+
+
+There are a few patterns. For simple commands, no handshaking is
+needed. The default is to handshake (with a signal, which is a special
+short message) only at actor startup and at destruction.
+
+For more complex protocols, or for cases where you need to wait for
+command completion, it's a good idea to switch to fully synchronous,
+with handshaking on every command. This is the zauth case. If you
+configure security and don't wait for that to end, things get
+confused.
+
+And then for complex protocols + data flow, we open a second socket to
+the actor on which we send data (in one or both directions), which is
+async and not handshaked.
+
+The mlm_server API falls into the "simple" category.
+

@@ -1,5 +1,3 @@
-copy from upstream
-
 fix README
 
 ch00.md
