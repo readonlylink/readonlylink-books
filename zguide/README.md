@@ -1,6 +1,7 @@
 # 0MQ - The Guide
 
-[ [UPSTREAM](https://github.com/booksbyus/zguide) | [READONLY.LINK](https://readonly.link/books/https://readonlylink-books.netlify.app/zguide/book.json) ]
+[ [UPSTREAM](https://github.com/booksbyus/zguide)
+| [READONLY.LINK](https://readonly.link/books/https://readonlylink-books.netlify.app/zguide/book.json) ]
 
 Written by Pieter Hintjens <ph@imatix.com>, CEO iMatix Corporation.
 

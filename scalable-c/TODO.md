@@ -1,5 +1,3 @@
-fix README
-
 ch00.md
 ch01.md
 ch02.md
