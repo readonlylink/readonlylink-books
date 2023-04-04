@@ -1,0 +1,10 @@
+{
+  "kind": "Book",
+  "title": "Scalable C",
+  "subtitle": "Writing Large-Scale Distributed C",
+  "version": "0.0.1",
+  "authors": ["Pieter Hintjens"],
+  "date": "2016",
+  "src": "src",
+  "contents": ["ch00.md", "ch01.md", "ch02.md", "ch03.md", "ch04.md", "ch05.md"]
+}
