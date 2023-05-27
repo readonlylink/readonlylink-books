@@ -1,0 +1,10 @@
+{
+  "kind": "Book",
+  "title": "INSTITUTIONES CALCULI DIFFERENTIALIS",
+  "subtitle": "CUM EIUS USU IN ANALYSI FINITORUM AC DOCTRINA SERIERUM",
+  "version": "0.0.1",
+  "authors": ["Euler"],
+  "date": "1755",
+  "src": "src",
+  "contents": ["PRAEFATIO.md"]
+}
