@@ -6,5 +6,5 @@
   "authors": ["Euler"],
   "date": "1755",
   "src": "src",
-  "contents": ["PRAEFATIO.md"]
+  "contents": ["00-PRAEFATIO.md", '01-DE-DIFFERENTIIS-FINITIS.md']
 }
