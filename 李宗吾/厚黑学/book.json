@@ -2,7 +2,7 @@
   "kind": "Book",
   "title": "厚黑学",
   "authors": ["李宗吾"],
-  "date": "1936-4-12",
+  "date": "1936-04-12",
   "src": "src",
   "contents": [
     "1-自序.md",
