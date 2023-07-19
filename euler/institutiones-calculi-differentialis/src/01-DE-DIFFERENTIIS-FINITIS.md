@@ -18,3 +18,35 @@ Huiusmodi ergo alteratio semper orietur, nisi functio speciem tantum
 quantitatis variabilis mentiatur, revera autem sit quantitas constans,
 veluti x^0; quo casu talis functio invariata manet, utcunque quantitas
 x immutetur.
+
+## 2
+
+Quae cum sint satis exposita,
+propius accedamus ad eas functionum affectiones,
+quibus universa analysis infinitorum innititur.
+Sit igitur y functio quaecunque quantitatis variabilis x,
+pro qua successive valores in arithmetica progressione procedentes substituantur,
+scilicet x, x + ω, x + 2ω, x + 3ω, x + 4ω, etc.,
+ac denotet y^I valorem, quem functio y induit,
+si ni ea loco x substituantur x + ω;
+simili modo sit y^II is ipsius y valor,
+si loco x scribatur x + 2ω,
+parique ratione denotent y^III, y^IV, y^V, etc.
+valores ipsius y, qui emergunt, dum loco x ponuntur
+x + 3ω, x + 4ω, x + 5ω, etc,
+ita ut isti diversi valores ipsarum x
+et y sequenti modo sibi respondeant:
+
+| x | x + ω | x + 2ω | x + 3ω | x + 4ω | x + 5ω | etc. |
+|---|-------|--------|--------|--------|--------|------|
+| y | y^I   | y^II   | y^III  | y^IV   | y^V    | etc. |
+
+## 3
+
+Quemadmodum series arithmetica
+x, x + ω, x + 2ω, etc.
+in infinitum continuari potest,
+ita series ex functione y orta
+y, y^I, y^II, etc.
+
+TODO
