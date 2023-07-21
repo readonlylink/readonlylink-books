@@ -3,7 +3,7 @@ title: DE DIFFERENTIIS FINITIS
 subtitle: CAPUT I
 ---
 
-## 1
+# 1
 
 Ex iis, quae in libro superiori de quantitatibus variabilibus atque
 functionibus sunt exposita, perspicuum est, prout quantitas
@@ -19,7 +19,7 @@ quantitatis variabilis mentiatur, revera autem sit quantitas constans,
 veluti x^0; quo casu talis functio invariata manet, utcunque quantitas
 x immutetur.
 
-## 2
+# 2
 
 Quae cum sint satis exposita,
 propius accedamus ad eas functionum affectiones,
@@ -41,12 +41,11 @@ et y sequenti modo sibi respondeant:
 |---|-------|--------|--------|--------|--------|------|
 | y | y^I   | y^II   | y^III  | y^IV   | y^V    | etc. |
 
-## 3
+# 3
 
 Quemadmodum series arithmetica
 x, x + ω, x + 2ω, etc.
 in infinitum continuari potest,
 ita series ex functione y orta
 y, y^I, y^II, etc.
-
-TODO
+quoque in infinitum progredietur eiusque natura pendebit ab indole functionis y.

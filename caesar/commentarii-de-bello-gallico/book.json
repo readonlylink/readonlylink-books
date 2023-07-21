@@ -1,0 +1,18 @@
+{
+  "kind": "Book",
+  "title": "COMMENTARII DE BELLO GALLICO",
+  "version": "0.0.1",
+  "authors": ["GAIUS IULIUS CAESAR"],
+  "date": "-49",
+  "src": "src",
+  "contents": [
+    "LIBER-I.md",
+    "LIBER-II.md",
+    "LIBER-III.md",
+    "LIBER-IV.md",
+    "LIBER-V.md",
+    "LIBER-VI.md",
+    "LIBER-VII.md",
+    "LIBER-VIII.md"
+  ]
+}
