@@ -3,7 +3,6 @@
   "title": "COMMENTARII DE BELLO GALLICO",
   "version": "0.0.1",
   "authors": ["GAIUS IULIUS CAESAR"],
-  "date": "-49",
   "src": "src",
   "contents": [
     "LIBER-I.md",
