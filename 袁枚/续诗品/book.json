@@ -2,6 +2,7 @@
   "kind": "Book",
   "title": "续诗品",
   "authors": ["袁枚"],
+  "date": "清",
   "src": "src",
   "contents": [
     "00-序.md",
