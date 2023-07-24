@@ -1,0 +1,20 @@
+{
+  "kind": "Book",
+  "title": "The C Programming Language",
+  "subtitle": "ANSI C",
+  "authors": ["Brian W. Kernighan", "Dennis M. Ritchie"],
+  "date": "1988",
+  "src": "src",
+  "contents": [
+    "preface.md",
+    "preface-to-the-first-edition.md",
+    "chapter-1.md",
+    "chapter-2.md",
+    "chapter-3.md",
+    "chapter-4.md",
+    "chapter-5.md",
+    "chapter-6.md",
+    "chapter-7.md",
+    "chapter-8.md"
+  ]
+}
