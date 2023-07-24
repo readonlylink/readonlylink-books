@@ -14,7 +14,7 @@ arithmetic, control flow, functions, and the rudiments of input and
 output. We are intentionally leaving out of this chapter features of C
 that are important for writing bigger programs. These include
 pointers, structures, most of C's rich set of operators, several
-control- flow statements, and the standard library.
+control-flow statements, and the standard library.
 
 This approach and its drawbacks.  Most notable is that the complete
 story on any particular feature is not found here, and the tutorial,
@@ -37,15 +37,18 @@ The only way to learn a new programming language is by writing
 programs in it. The first program to write is the same for all
 languages:
 
-> Print the words \
->   `hello, world`
+Print the words
+
+```
+hello, world
+```
 
 This is a big hurdle; to leap over it you have to be able to create
 the program text somewhere, compile it successfully, load it, run it,
 and find out where your output went.  With these mechanical details
 mastered, everything else is comparatively easy.
 
-In C, the program to print ``hello, world'' is
+In C, the program to print "hello, world" is
 
 ```c
 #include <stdio.h>
@@ -58,19 +61,19 @@ main()
 
 Just how to run this program depends on the system you are using. As a
 specific example, on the UNIX operating system you must create the
-program in a file whose name ends in ``.c'', such as hello.c, then
+program in a file whose name ends in ".c", such as `hello.c`, then
 compile it with the command
 
-```sh
+```
 cc hello.c
 ```
 
 If you haven't botched anything, such as omitting a character or
 misspelling something, the compilation will proceed silently, and make
-an executable file called a.out. If you run a.out by typing the
+an executable file called `a.out`. If you run `a.out` by typing the
 command
 
-```sh
+```
 a.out
 ```
 
@@ -84,13 +87,13 @@ On other systems, the rules will be different; check with a local
 expert.
 
 Now, for some explanations about the program itself. A C program,
-whatever its size, consists of functions and variables.  A function
-contains statements that specify the computing operations to be done,
+whatever its size, consists of _functions_ and _variables_.  A function
+contains _statements_ that specify the computing operations to be done,
 and variables store values used during the computation. C functions
 are like the subroutines and functions in Fortran or the procedures
-and functions of Pascal. Our example is a function named main.
+and functions of Pascal. Our example is a function named `main`.
 Normally you are at liberty to give functions whatever names you like,
-but ``main'' is special - your program begins executing at the
+but "main" is special - your program begins executing at the
 beginning of main. This means that every program must have a main
 somewhere.
 
@@ -169,7 +172,7 @@ general  and  extensible  mechanism  for  representing  hard-to-type  or  invisi
 Among the others that C provides are  \t for tab,  \b for backspace,  \" for the double quote
 and \\ for the backslash itself. There is a complete list in Section 2.3.
 
-Exercise  1-1.  Run  the  ``hello,  world''  program  on  your  system.  Experiment  with  leaving
+Exercise  1-1.  Run  the  "hello,  world"  program  on  your  system.  Experiment  with  leaving
 out parts of the program, to see what error messages you get.
 
 Exercise 1-2. Experiment to find out what happens when prints's argument string contains
@@ -204,7 +207,7 @@ temperatures and their centigrade or Celsius equivalents:
    280  137
    300  148
 The program itself still consists of the definition of a single function named main. It is longer
-than  the  one  that  printed  ``hello,  world'',  but  not  complicated.  It  introduces  several  new
+than  the  one  that  printed  "hello,  world",  but  not  complicated.  It  introduces  several  new
 ideas,  including  comments,  declarations,  variables,  arithmetic  expressions,  loops  ,  and
 formatted output.
 
@@ -540,7 +543,7 @@ that is, from 300 degrees to 0.
 1.4 Symbolic Constants
 
 A final observation before we leave temperature conversion forever. It's bad practice to bury
-``magic  numbers''  like  300  and  20  in  a  program;  they  convey  little  information  to  someone
+"magic  numbers"  like  300  and  20  in  a  program;  they  convey  little  information  to  someone
 who might have to read the program later, and they are hard to change in a systematic way.
 One  way  to  deal  with  magic  numbers  is  to  give  them  meaningful  names.  A  #define  line
 defines a symbolic name or symbolic constant to be a particular string of characters:
@@ -633,7 +636,7 @@ Converting this into C gives:
            c = getchar();
        }
    }
-The relational operator != means ``not equal to''.
+The relational operator != means "not equal to".
 
 
 
@@ -652,7 +655,7 @@ reason.
 
 The problem is distinguishing the end of input from valid data. The solution is that getchar
 returns a distinctive value when there is no more input, a value that cannot be confused with
-any real character. This value is called EOF, for ``end of file''. We must declare c to be a type
+any real character. This value is called EOF, for "end of file". We must declare c to be a type
 big  enough  to  hold  any  value  that  getchar  returns.  We  can't  use  char  since  c  must  be  big
 enough to hold EOF in addition to any possible char. Therefore we use int.
 
@@ -814,7 +817,7 @@ if  statement  tests  the  parenthesized  condition,  and  if  the  condition  i
 statement  (or  group  of  statements  in  braces)  that  follows.  We  have  again  indented  to  show
 what is controlled by what.
 
-The  double  equals  sign  ==  is  the  C  notation  for  ``is  equal  to''  (like  Pascal's  single  =  or
+The  double  equals  sign  ==  is  the  C  notation  for  "is  equal  to"  (like  Pascal's  single  =  or
 Fortran's .EQ.). This symbol is used to distinguish the equality test from the single = that C
 uses  for  assignment.  A  word  of  caution:  newcomers  to  C  occasionally  write  =  when  they
 mean ==. As we will see in Chapter 2, the result is usually a legal expression, so you will get
@@ -881,8 +884,8 @@ newline. This is a bare-bones version of the UNIX program wc.
        printf("%d %d %d\n", nl, nw, nc);
    }
 Every time the program encounters the first character of a word, it counts one more word. The
-variable state records whether the program is currently in a word or not; initially it is ``not in
-a word'', which is assigned the value OUT. We prefer the symbolic constants IN and OUT to the
+variable state records whether the program is currently in a word or not; initially it is "not in
+a word", which is assigned the value OUT. We prefer the symbolic constants IN and OUT to the
 literal values 1 and 0 because they make the program more readable. In a program as tiny as
 this, it makes little difference, but in larger programs, the increase in clarity is well worth the
 modest extra effort to write it this way from the beginning. You'll also find that it's easier to
@@ -908,7 +911,7 @@ as if we had written
 The operator || means OR, so the line
 
    if (c == ' ' || c == '\n' || c = '\t')
-says ``if c is a blank or c is a newline or c is a tab''. (Recall that the escape sequence \t is a
+says "if c is a blank or c is a newline or c is a tab". (Recall that the escape sequence \t is a
 visible representation of the tab character.) There is a corresponding operator && for AND; its
 precedence  is  just  higher  than  ||.  Expressions  connected  by  &&  or  ||  are  evaluated  left  to
 right, and it is guaranteed that evaluation will stop as soon as the truth or falsehood is known.
@@ -1162,7 +1165,7 @@ may follow return:
 
    return expression;
 A function need not return a value; a return statement with no expression causes control, but
-no  useful  value,  to  be  returned  to  the  caller,  as  does  ``falling  off  the  end''  of  a  function  by
+no  useful  value,  to  be  returned  to  the  caller,  as  does  "falling  off  the  end"  of  a  function  by
 reaching the terminating right brace. And the calling function can ignore a value returned by a
 function.
 
@@ -1234,10 +1237,10 @@ for conversion.
 1.8 Arguments - Call by Value
 
 One  aspect  of  C  functions  may  be  unfamiliar  to  programmers  who  are  used  to  some  other
-languages,  particulary  Fortran.  In  C,  all  function  arguments  are  passed  ``by  value.''  This
+languages,  particulary  Fortran.  In  C,  all  function  arguments  are  passed  "by  value."  This
 means  that  the  called  function  is  given  the  values  of  its  arguments  in  temporary  variables
-rather than the originals. This leads to some different properties than are seen with ``call by
-reference'' languages like Fortran or with var parameters in Pascal, in which the called routine
+rather than the originals. This leads to some different properties than are seen with "call by
+reference" languages like Fortran or with var parameters in Pascal, in which the called routine
 has access to the original argument, not a local copy.
 
 Call by value is an asset, however, not a liability. It usually leads to more compact programs
@@ -1554,7 +1557,7 @@ declaration,  and  turns  off  all  argument  list  checking;  the  word  void  
 explicitly empty list. We will discuss this further in Chapter 4.
 
 You  should  note  that  we  are  using  the  words  definition  and  declaration  carefully  when  we
-refer to external variables in this section.``Definition'' refers to the place where the variable is
+refer to external variables in this section."Definition" refers to the place where the variable is
 
 
 
@@ -1564,7 +1567,7 @@ refer to external variables in this section.``Definition'' refers to the place w
 
 34
 
-created or assigned storage; ``declaration'' refers to places where the nature of the variable is
+created or assigned storage; "declaration" refers to places where the nature of the variable is
 stated but no storage is allocated.
 
 By  the  way,  there  is  a  tendency  to  make  everything  in  sight  an  extern  variable  because  it
@@ -1591,7 +1594,7 @@ number of tabs and blanks to achieve the same spacing. Use the same tab stops as
 When either a tab or a single blank would suffice to reach a tab stop, which should be given
 preference?
 
-Exercise 1-22. Write a program to ``fold'' long input lines into two or more shorter lines after
+Exercise 1-22. Write a program to "fold" long input lines into two or more shorter lines after
 the  last  non-blank  character  that  occurs  before  the  n-th  column  of  input.  Make  sure  your
 program  does  something  intelligent  with  very  long  lines,  and  if  there  are  no  blanks  or  tabs
 before the specified column.

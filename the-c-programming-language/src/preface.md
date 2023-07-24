@@ -3,9 +3,9 @@ title: Preface
 ---
 
 The computing world has undergone a revolution since the publication
-of The C Programming Language in 1978. Big computers are much bigger,
-and personal computers have capabilities that rival mainframes of a
-decade ago. During this time, C has changed too, although only
+of _The C Programming Language_ in 1978. Big computers are much
+bigger, and personal computers have capabilities that rival mainframes
+of a decade ago. During this time, C has changed too, although only
 modestly, and it has spread far beyond its origins as the language of
 the UNIX operating system.
 
@@ -29,7 +29,7 @@ makes precise the behavior of features that were not spelled out in
 the original definition, and at the same time states explicitly which
 aspects of the language remain machine-dependent.
 
-This Second Edition of The C Programming Language describes C as
+This Second Edition of _The C Programming Language_ describes C as
 defined by the ANSI standard. Although we have noted the places where
 the language has evolved, we have chosen to write exclusively in the
 new form. For the most part, this makes no significant difference; the
