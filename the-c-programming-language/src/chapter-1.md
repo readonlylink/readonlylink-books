@@ -696,112 +696,119 @@ are made.
 
 ## 1.5.1 File Copying
 
-Given  getchar  and  putchar,  you  can  write  a  surprising  amount  of  useful  code  without
-knowing  anything  more  about  input  and  output.  The  simplest  example  is  a  program  that
-copies its input to its output one character at a time:
+Given `getchar` and `putchar`, you can write a surprising amount of
+useful code without knowing anything more about input and output.  The
+simplest example is a program that copies its input to its output one
+character at a time:
 
+```
 read a character
     while (charater is not end-of-file indicator)
         output the character just read
         read a character
+```
+
 Converting this into C gives:
 
-   #include <stdio.h>
+```c
+#include <stdio.h>
 
-   /* copy input to output; 1st version  */
-   main()
-   {
-       int c;
+/* copy input to output; 1st version  */
+main()
+{
+    int c;
 
-       c = getchar();
-       while (c != EOF) {
-           putchar(c);
-           c = getchar();
-       }
-   }
-The relational operator != means "not equal to".
+    c = getchar();
+    while (c != EOF) {
+        putchar(c);
+        c = getchar();
+    }
+}
+```
 
+The relational operator `!=` means "not equal to".
 
+What appears to be a character on the keyboard or screen is of course,
+like everything else, stored internally just as a bit pattern.  The
+type `char` is specifically meant for storing such character data, but
+any integer type can be used.  We used `int` for a subtle but
+important reason.
 
+The problem is distinguishing the end of input from valid data. The
+solution is that `getchar` returns a distinctive value when there is
+no more input, a value that cannot be confused with any real
+character. This value is called `EOF`, for "end of file". We must
+declare `c` to be a type big enough to hold any value that `getchar`
+returns.  We can't use `char` since `c` must be big enough to hold
+`EOF` in addition to any possible `char`. Therefore we use `int`.
 
+`EOF` is an integer defined in `<stdio.h>`, but the specific numeric
+value doesn't matter as long as it is not the same as any `char`
+value.  By using the symbolic constant, we are assured that nothing in
+the program depends on the specific numeric value.
 
+The program for copying would be written more concisely by experienced
+C programmers. In C, any assignment, such as
 
+```c
+c = getchar();
+```
 
+is an expression and has a value, which is the value of the left hand
+side after the assignment.  This means that a assignment can appear as
+part of a larger expression. If the assignment of a character to `c`
+is put inside the test part of a `while` loop, the copy program can be
+written this way:
 
+```c
+#include <stdio.h>
 
-19
+/* copy input to output; 2nd version  */
+main()
+{
+    int c;
 
-What appears to be a character on the keyboard or screen is of course, like everything else,
-stored  internally  just  as  a  bit  pattern.  The  type  char  is  specifically  meant  for  storing  such
-character  data,  but  any  integer  type  can  be  used.  We  used  int  for  a  subtle  but  important
-reason.
+    while ((c = getchar()) != EOF)
+        putchar(c);
+}
+```
 
-The problem is distinguishing the end of input from valid data. The solution is that getchar
-returns a distinctive value when there is no more input, a value that cannot be confused with
-any real character. This value is called EOF, for "end of file". We must declare c to be a type
-big  enough  to  hold  any  value  that  getchar  returns.  We  can't  use  char  since  c  must  be  big
-enough to hold EOF in addition to any possible char. Therefore we use int.
+The `while` gets a character, assigns it to `c`, and then tests
+whether the character was the end-of-file signal.  If it was not, the
+body of the `while` is executed, printing the character.  The `while`
+then repeats. When the end of the input is finally reached, the
+`while` terminates and so does `main`.
 
-EOF is an integer defined in <stdio.h>, but the specific numeric value doesn't matter as long as
-it  is  not  the  same  as  any  char  value.  By  using  the  symbolic  constant,  we  are  assured  that
-nothing in the program depends on the specific numeric value.
+This version centralizes the input - there is now only one reference
+to `getchar` - and shrinks the program. The resulting program is more
+compact, and, once the idiom is mastered, easier to read. You'll see
+this style often. (It's possible to get carried away and create
+impenetrable code, however, a tendency that we will try to curb.)
 
-The program for copying would be written more concisely by experienced C programmers. In
-C, any assignment, such as
+The parentheses around the assignment, within the condition are
+necessary. The _precedence_ of `!=` is higher than that of `=`, which
+means that in the absence of parentheses the relational test `!=`
+would be done before the assignment `=`. So the statement
 
-   c = getchar();
-is an expression and has a value, which is the value of the left hand side after the assignment.
-This means that a assignment can appear as part of a larger expression. If the assignment of a
-character to c is put inside the test part of a while loop, the copy program can be written this
-way:
+```c
+c = getchar() != EOF
+```
 
-   #include <stdio.h>
-
-   /* copy input to output; 2nd version  */
-   main()
-   {
-       int c;
-
-       while ((c = getchar()) != EOF)
-           putchar(c);
-   }
-The while gets a character, assigns it to c, and then tests whether the character was the end-
-of-file  signal.  If  it  was  not,  the  body  of  the  while  is  executed,  printing  the  character.  The
-while then repeats. When the end of the input is finally reached, the while terminates and so
-does main.
-
-This version centralizes the input - there is now only one reference to getchar - and shrinks
-the program. The resulting program is more compact, and, once the idiom is mastered, easier
-to read. You'll see this style often. (It's possible to get carried away and create impenetrable
-code, however, a tendency that we will try to curb.)
-
-The parentheses around the assignment, within the condition are necessary. The precedence
-of  != is higher than that of =, which means that in the absence of parentheses the relational
-test != would be done before the assignment =. So the statement
-
-   c = getchar() != EOF
 is equivalent to
 
-   c = (getchar() != EOF)
+```c
+c = (getchar() != EOF)
+```
 
+This has the undesired effect of setting `c` to 0 or 1, depending on
+whether or not the call of `getchar` returned end of file. (More on
+this in Chapter 2.)
 
+**Exercsise 1-6**. Verify that the expression `getchar() != EOF` is 0 or 1.
 
+**Exercise 1-7**. Write a program to print the value of `EOF`.
 
-
-
-
-
-
-This has the undesired effect of setting c to 0 or 1, depending on whether or not the call of
-getchar returned end of file. (More on this in Chapter 2.)
-
-20
-
-Exercsise 1-6. Verify that the expression getchar() != EOF is 0 or 1.
-
-Exercise 1-7. Write a program to print the value of EOF.
-
-1.5.2 Character Counting
+## 1.5.2 Character Counting
 
 The next program counts characters; it is similar to the copy program.
 
