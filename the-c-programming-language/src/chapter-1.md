@@ -119,17 +119,19 @@ that expects no arguments, which is indicated by the empty list `( )`.
 **The first C program**
 
 ```c
-#include <stdio.h>                // include information about standard library
+// include information about standard library
+#include <stdio.h>
 
-main()                            // define a function called `main`
-                                  // that received no argument values
+// define a function called `main`
+// that received no argument values
+main()
 
-{                                 // statements of `main` are enclosed in braces
-
-    printf("hello, world\n");     // `main` calls library function `printf`
-                                  // to print this sequence of characters
-                                  // `\n` represents the newline character
-
+// statements of `main` are enclosed in braces
+{
+  // `main` calls library function `printf`
+  // to print this sequence of characters
+  // `\n` represents the newline character
+  printf("hello, world\n");
 }
 ```
 
@@ -150,26 +152,35 @@ called a _character string_ or _string constant_.  For the moment our
 only use of character strings will be as arguments for `printf` and
 other functions.
 
-The  sequence  \n  in  the  string  is  C  notation  for  the  newline  character,  which  when  printed
-advances the output to the left margin on the next line. If you leave out the \n (a worthwhile
-experiment), you will find that there is no line advance after the output is printed. You must
-use \n to include a newline character in the printf argument; if you try something like
+The sequence `\n` in the string is C notation for the _newline
+character_, which when printed advances the output to the left margin
+on the next line. If you leave out the `\n` (a worthwhile experiment),
+you will find that there is no line advance after the output is
+printed. You must use `\n` to include a newline character in the
+`printf` argument; if you try something like
 
-   printf("hello, world
-   ");
+```c
+printf("hello, world
+");
+```
+
 the C compiler will produce an error message.
 
-printf  never  supplies  a  newline  character  automatically,  so  several  calls  may  be  used  to
-build up an output line in stages. Our first program could just as well have been written
+`printf` never supplies a newline character automatically, so several
+calls may be used to build up an output line in stages. Our first
+program could just as well have been written
 
-   #include <stdio.h>
+```c
+#include <stdio.h>
 
-   main()
-   {
-     printf("hello, ");
-     printf("world");
-     printf("\n");
-   }
+main()
+{
+  printf("hello, ");
+  printf("world");
+  printf("\n");
+}
+```
+
 to produce identical output.
 
 Notice  that  \n  represents  only  a  single  character.  An  escape  sequence  like  \n  provides  a
