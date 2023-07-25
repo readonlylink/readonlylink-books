@@ -952,89 +952,106 @@ by `\\`.  This makes tabs and backspaces visible in an unambiguous way.
 
 ## 1.5.4 Word Counting
 
-The fourth in our series of useful programs counts lines, words, and characters, with the loose
-definition  that  a  word  is  any  sequence  of  characters  that  does  not  contain  a  blank,  tab  or
-newline. This is a bare-bones version of the UNIX program wc.
+The fourth in our series of useful programs counts lines, words, and
+characters, with the loose definition that a word is any sequence of
+characters that does not contain a blank, tab or newline. This is a
+bare-bones version of the UNIX program `wc`.
 
-   #include <stdio.h>
+```c
+#include <stdio.h>
 
-   #define IN   1  /* inside a word */
-   #define OUT  0  /* outside a word */
+#define IN   1  /* inside a word */
+#define OUT  0  /* outside a word */
 
-   /* count lines, words, and characters in input */
-   main()
-   {
-       int c, nl, nw, nc, state;
+/* count lines, words, and characters in input */
+main()
+{
+    int c, nl, nw, nc, state;
 
-       state = OUT;
-       nl = nw = nc = 0;
-       while ((c = getchar()) != EOF) {
-           ++nc;
-           if (c == '\n')
-               ++nl;
-           if (c == ' ' || c == '\n' || c = '\t')
-               state = OUT;
-           else if (state == OUT) {
-               state = IN;
-               ++nw;
-           }
-       }
-       printf("%d %d %d\n", nl, nw, nc);
-   }
-Every time the program encounters the first character of a word, it counts one more word. The
-variable state records whether the program is currently in a word or not; initially it is "not in
-a word", which is assigned the value OUT. We prefer the symbolic constants IN and OUT to the
-literal values 1 and 0 because they make the program more readable. In a program as tiny as
-this, it makes little difference, but in larger programs, the increase in clarity is well worth the
-modest extra effort to write it this way from the beginning. You'll also find that it's easier to
-make  extensive  changes  in  programs  where  magic  numbers  appear  only  as  symbolic
-constants.
+    state = OUT;
+    nl = nw = nc = 0;
+    while ((c = getchar()) != EOF) {
+        ++nc;
+        if (c == '\n')
+            ++nl;
+        if (c == ' ' || c == '\n' || c = '\t')
+            state = OUT;
+        else if (state == OUT) {
+            state = IN;
+            ++nw;
+        }
+    }
+    printf("%d %d %d\n", nl, nw, nc);
+}
+```
 
+Every time the program encounters the first character of a word, it
+counts one more word. The variable `state` records whether the program
+is currently in a word or not; initially it is "not in a word", which
+is assigned the value `OUT`. We prefer the symbolic constants `IN` and `OUT`
+to the literal values 1 and 0 because they make the program more
+readable. In a program as tiny as this, it makes little difference,
+but in larger programs, the increase in clarity is well worth the
+modest extra effort to write it this way from the beginning. You'll
+also find that it's easier to make extensive changes in programs where
+magic numbers appear only as symbolic constants.
 
-
-
-
-
-
-23
 
 The line
 
-   nl = nw = nc = 0;
-sets all three variables to zero. This is not a special case, but a consequence of the fact that an
-assignment is an expression with the value and assignments associated from right to left. It's
-as if we had written
+```c
+nl = nw = nc = 0;
+```
 
-   nl = (nw = (nc = 0));
-The operator || means OR, so the line
+sets all three variables to zero. This is not a special case, but a
+consequence of the fact that an assignment is an expression with the
+value and assignments associated from right to left. It's as if we had
+written
 
-   if (c == ' ' || c == '\n' || c = '\t')
-says "if c is a blank or c is a newline or c is a tab". (Recall that the escape sequence \t is a
-visible representation of the tab character.) There is a corresponding operator && for AND; its
-precedence  is  just  higher  than  ||.  Expressions  connected  by  &&  or  ||  are  evaluated  left  to
-right, and it is guaranteed that evaluation will stop as soon as the truth or falsehood is known.
-If  c is a blank,  there is no need to test  whether it is a newline or tab, so these tests are not
-made. This isn't particularly important here, but is significant in more complicated situations,
-as we will soon see.
+```c
+nl = (nw = (nc = 0));
+```
 
-The example also shows an else, which specifies an alternative action if the condition part of
-an if statement is false. The general form is
+The operator `||` means OR, so the line
 
+```c
+if (c == ' ' || c == '\n' || c = '\t')
+```
+
+says "if `c` is a blank or `c` is a newline or `c` is a tab". (Recall
+that the escape sequence `\t` is a visible representation of the tab
+character.) There is a corresponding operator `&&` for AND; its
+precedence is just higher than `||`.  Expressions connected by `&&` or
+`||` are evaluated left to right, and it is guaranteed that evaluation
+will stop as soon as the truth or falsehood is known.  If `c` is a
+blank, there is no need to test whether it is a newline or tab, so
+these tests are not made. This isn't particularly important here, but
+is significant in more complicated situations, as we will soon see.
+
+The example also shows an `else`, which specifies an alternative
+action if the condition part of an `if` statement is false. The
+general form is
+
+```c
    if (expression)
        statement1
    else
        statement2
-One  and  only  one  of  the  two  statements  associated  with  an  if-else  is  performed.  If  the
-expression is true, statement1 is executed; if not, statement2 is executed. Each statement can
-be a single statement or several in braces. In the word count program, the one after the else is
-an if that controls two statements in braces.
+```
 
-Exercise 1-11. How would you test the word count program? What kinds of input are most
-likely to uncover bugs if there are any?
+One and only one of the two statements associated with an `if-else` is
+performed.  If the _expression_ is true, `statement1` is executed; if
+not, `statement2` is executed. Each _statement_ can be a single
+statement or several in braces. In the word count program, the one
+after the `else` is an `if` that controls two statements in braces.
 
-Exercise 1-12. Write a program that prints its input one word per line.
+**Exercise 1-11**. How would you test the word count program? What
+kinds of input are most likely to uncover bugs if there are any?
 
-1.6 Arrays
+**Exercise 1-12**. Write a program that prints its input one word per
+line.
+
+# 1.6 Arrays
 
 Let  is  write  a  program  to  count  the  number  of  occurrences  of  each  digit,  of  white  space
 characters (blank, tab, newline), and of all other characters. This is artificial, but it permits us
