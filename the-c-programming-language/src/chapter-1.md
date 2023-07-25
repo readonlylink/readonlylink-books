@@ -974,7 +974,7 @@ main()
         ++nc;
         if (c == '\n')
             ++nl;
-        if (c == ' ' || c == '\n' || c = '\t')
+        if (c == ' ' || c == '\n' || c == '\t')
             state = OUT;
         else if (state == OUT) {
             state = IN;
@@ -1015,7 +1015,7 @@ nl = (nw = (nc = 0));
 The operator `||` means OR, so the line
 
 ```c
-if (c == ' ' || c == '\n' || c = '\t')
+if (c == ' ' || c == '\n' || c == '\t')
 ```
 
 says "if `c` is a blank or `c` is a newline or `c` is a tab". (Recall
@@ -1061,13 +1061,6 @@ There are twelve categories of input, so it is convenient to use an array to hol
 occurrences  of  each  digit,  rather  than  ten  individual  variables.  Here  is  one  version  of  the
 program:
 
-
-
-
-
-
-
-24
 
    #include <stdio.h>
 
