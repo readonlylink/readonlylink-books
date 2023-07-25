@@ -812,78 +812,83 @@ this in Chapter 2.)
 
 The next program counts characters; it is similar to the copy program.
 
-   #include <stdio.h>
+```c
+#include <stdio.h>
 
-   /* count characters in input; 1st version */
-   main()
-   {
-       long nc;
+/* count characters in input; 1st version */
+main()
+{
+    long nc;
 
-       nc = 0;
-       while (getchar() != EOF)
-           ++nc;
-       printf("%ld\n", nc);
-   }
+    nc = 0;
+    while (getchar() != EOF)
+        ++nc;
+    printf("%ld\n", nc);
+}
+```
+
 The statement
 
-   ++nc;
-presents a new operator, ++, which means increment by one. You could instead write nc = nc
-+ 1 but ++nc is more concise and often more efficient. There is a corresponding operator --
-to decrement by 1. The operators ++ and  -- can be either prefix operators (++nc) or postfix
-operators (nc++); these two forms have different values in expressions, as will be shown in
-Chapter  2,  but  ++nc  and  nc++  both  increment  nc.  For  the  moment  we  will  will  stick  to  the
+```c
+++nc;
+```
+
+presents a new operator, `++`, which means _increment by one_. You
+could instead write `nc = nc + 1` but `++nc` is more concise and often
+more efficient. There is a corresponding operator `--` to decrement
+by 1. The operators `++` and `--` can be either prefix operators
+(`++nc`) or postfix operators (`nc++`); these two forms have different
+values in expressions, as will be shown in Chapter 2, but `++nc` and
+`nc++` both increment `nc`.  For the moment we will will stick to the
 prefix form.
 
-The  character  counting  program  accumulates  its  count  in  a  long  variable  instead  of  an  int.
-long  integers  are  at  least  32  bits.  Although  on  some  machines,  int  and  long  are  the  same
-size, on others an int is 16 bits, with a maximum value of 32767, and it would take relatively
-little input to overflow an int counter. The conversion specification %ld tells printf that the
-corresponding argument is a long integer.
+The character counting program accumulates its count in a `long`
+variable instead of an `int`.  `long` integers are at least 32 bits.
+Although on some machines, `int` and `long` are the same size, on
+others an `int` is 16 bits, with a maximum value of 32767, and it
+would take relatively little input to overflow an `int` counter. The
+conversion specification `%ld` tells `printf` that the corresponding
+argument is a `long` integer.
 
-It  may  be  possible  to  cope  with  even  bigger  numbers  by  using  a  double  (double  precision
-float). We will also use a for statement instead of a while, to illustrate another way to write
-the loop.
+It may be possible to cope with even bigger numbers by using a `double`
+(double precision `float`). We will also use a `for` statement instead of
+a `while`, to illustrate another way to write the loop.
 
-    #include <stdio.h>
+```c
+#include <stdio.h>
 
-   /* count characters in input; 2nd version */
-   main()
-   {
-       double nc;
+/* count characters in input; 2nd version */
+main()
+{
+    double nc;
 
-       for (nc = 0; gechar() != EOF; ++nc)
-           ;
-       printf("%.0f\n", nc);
-   }
+    for (nc = 0; gechar() != EOF; ++nc)
+        ;
+    printf("%.0f\n", nc);
+}
+```
 
+`printf` uses `%f` for both float and double; `%.0f` suppresses the
+printing of the decimal point and the fraction part, which is zero.
 
+The body of this `for` loop is empty, because all the work is done in
+the test and increment parts. But the grammatical rules of C require
+that a `for` statement have a body. The isolated semicolon, called a
+_null statement_, is there to satisfy that requirement. We put it on a
+separate line to make it visible.
 
+Before we leave the character counting program, observe that if the
+input contains no characters, the `while` or `for` test fails on the
+very first call to `getchar`, and the program produces zero, the right
+answer.  This is important.  One of the nice things about `while` and
+`for` is that they test at the top of the loop, before proceeding with
+the body. If there is nothing to do, nothing is done, even if that
+means never going through the loop body.  Programs should act
+intelligently when given zero-length input.  The `while` and `for`
+statements help ensure that programs do reasonable things with
+boundary conditions.
 
-
-
-
-
-
-
-21
-
-printf uses %f for both float and double; %.0f suppresses the printing of the decimal point
-and the fraction part, which is zero.
-
-The  body  of  this  for  loop  is  empty,  because  all  the  work is done in the test and increment
-parts. But the grammatical rules of C require that a for statement have a body. The isolated
-semicolon, called a null statement, is there to satisfy that requirement. We put it on a separate
-line to make it visible.
-
-Before  we  leave  the  character  counting  program,  observe  that  if  the  input  contains  no
-characters,  the  while  or  for  test  fails  on  the  very  first  call  to  getchar,  and  the  program
-produces  zero,  the  right  answer.  This  is  important.  One  of  the  nice  things  about  while  and
-for is that they test at the top of the loop, before proceeding with the body. If there is nothing
-to  do,  nothing  is  done,  even  if  that  means  never  going  through  the  loop  body.  Programs
-should  act  intelligently  when  given  zero-length  input.  The  while  and  for  statements  help
-ensure that programs do reasonable things with boundary conditions.
-
-1.5.3 Line Counting
+## 1.5.3 Line Counting
 
 The  next  program  counts  input  lines.  As  we  mentioned  above,  the  standard  library  ensures
 that an input text stream appears as a sequence of lines, each terminated by a newline. Hence,
