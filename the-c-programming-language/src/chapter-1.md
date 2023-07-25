@@ -50,7 +50,7 @@ mastered, everything else is comparatively easy.
 
 In C, the program to print "hello, world" is
 
-```
+```c
 #include <stdio.h>
 
 main()
@@ -101,7 +101,7 @@ somewhere.
 that you wrote, and others from libraries that are provided for
 you. The first line of the program,
 
-```
+```c
 #include <stdio.h>
 ```
 
@@ -118,7 +118,7 @@ that expects no arguments, which is indicated by the empty list `( )`.
 
 **The first C program**
 
-```
+```c
 // include information about standard library
 #include <stdio.h>
 
@@ -138,7 +138,7 @@ main()
 The statements of a function are enclosed in braces `{ }`. The function
 `main` contains only one statement,
 
-```
+```c
 printf("hello, world\n");
 ```
 
@@ -159,7 +159,7 @@ you will find that there is no line advance after the output is
 printed. You must use `\n` to include a newline character in the
 `printf` argument; if you try something like
 
-```
+```c
 printf("hello, world
 ");
 ```
@@ -170,7 +170,7 @@ the C compiler will produce an error message.
 calls may be used to build up an output line in stages. Our first
 program could just as well have been written
 
-```
+```c
 #include <stdio.h>
 
 main()
@@ -229,7 +229,7 @@ world"`, but not complicated.  It introduces several new ideas,
 including comments, declarations, variables, arithmetic expressions,
 loops , and formatted output.
 
-```
+```c
 #include <stdio.h>
 
 /* print Fahrenheit-Celsius table
@@ -270,7 +270,7 @@ the beginning of the function before any executable statements.  A
 _declaration_ announces the properties of variables; it consists of a
 name and a list of variables, such as
 
-```
+```c
 int fahr, celsius;
 int lower, upper, step;
 ```
@@ -300,7 +300,7 @@ in due course.
 Computation in the temperature conversion program begins with the
 _assignment statements_
 
-```
+```c
 lower = 0;
 upper = 300;
 step = 20;
@@ -312,7 +312,7 @@ statements are terminated by semicolons.
 Each line of the table is computed the same way, so we use a loop that
 repeats once per output line; this is the purpose of the `while` loop
 
-```
+```c
 while (fahr <= upper) {
    ...
 }
@@ -331,7 +331,7 @@ The body of a `while` can be one or more statements enclosed in
 braces, as in the temperature converter, or a single statement without
 braces, as in
 
-```
+```c
 while (i < j)
     i = 2 * i;
 ```
@@ -349,31 +349,37 @@ chosen one of several popular styles. Pick a style that suits you,
 then use it consistently.
 
 Most of the work gets done in the body of the loop. The Celsius
-temperature is computed and assigned to the variable celsius by the
+temperature is computed and assigned to the variable `celsius` by the
 statement
 
-```
+```c
 celsius = 5 * (fahr-32) / 9;
 ```
 
-The reason for multiplying by 5 and dividing by 9 instead of just multiplying by 5/9 is that in
-C,  as  in  many  other  languages,  integer  division  truncates:  any  fractional  part  is  discarded.
-Since 5 and 9 are integers. 5/9 would be truncated to zero and so all the Celsius temperatures
-would be reported as zero.
+The reason for multiplying by 5 and dividing by 9 instead of just
+multiplying by 5/9 is that in C, as in many other languages, integer
+division _truncates_: any fractional part is discarded.  Since 5 and 9
+are integers. 5/9 would be truncated to zero and so all the Celsius
+temperatures would be reported as zero.
 
-This  example  also  shows  a  bit  more  of  how  printf  works.  printf  is  a  general-purpose
-output formatting function, which we will describe in detail in Chapter 7. Its first argument is
-a  string  of  characters  to  be  printed,  with  each  %  indicating  where  one  of  the  other  (second,
-third, ...) arguments is to be substituted, and in what form it is to be printed. For instance, %d
-specifies an integer argument, so the statement
+This example also shows a bit more of how `printf` works.  `printf` is
+a general-purpose output formatting function, which we will describe
+in detail in Chapter 7. Its first argument is a string of characters
+to be printed, with each `%` indicating where one of the other
+(second, third, ...) arguments is to be substituted, and in what form
+it is to be printed. For instance, `%d` specifies an integer argument,
+so the statement
 
-        printf("%d\t%d\n", fahr, celsius);
-causes the values of the two integers fahr and celsius to be printed, with a tab (\t) between
-them.
+```c
+printf("%d\t%d\n", fahr, celsius);
+```
 
-Each % construction in the first argument of printf is paired with the corresponding second
-argument, third argument, etc.; they must match up properly by number and type, or you will
-get wrong answers.
+causes the values of the two integers `fahr` and `celsius` to be printed,
+with a tab (`\t`) between them.
+
+Each `%` construction in the first argument of `printf` is paired with
+the corresponding second argument, third argument, etc.; they must
+match up properly by number and type, or you will get wrong answers.
 
 By  the  way,  printf  is  not  part  of  the  C  language;  there  is  no  input  or  output  defined  in  C
 itself. printf is just a useful function from the standard library of functions that are normally
