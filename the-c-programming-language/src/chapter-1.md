@@ -1053,129 +1053,148 @@ line.
 
 # 1.6 Arrays
 
-Let  is  write  a  program  to  count  the  number  of  occurrences  of  each  digit,  of  white  space
-characters (blank, tab, newline), and of all other characters. This is artificial, but it permits us
-to illustrate several aspects of C in one program.
+Let is write a program to count the number of occurrences of each
+digit, of white space characters (blank, tab, newline), and of all
+other characters. This is artificial, but it permits us to illustrate
+several aspects of C in one program.
 
-There are twelve categories of input, so it is convenient to use an array to hold the number of
-occurrences  of  each  digit,  rather  than  ten  individual  variables.  Here  is  one  version  of  the
-program:
+There are twelve categories of input, so it is convenient to use an
+array to hold the number of occurrences of each digit, rather than ten
+individual variables.  Here is one version of the program:
 
+```c
+#include <stdio.h>
 
-   #include <stdio.h>
+/* count digits, white space, others */
+main()
+{
+    int c, i, nwhite, nother;
+    int ndigit[10];
 
-   /* count digits, white space, others */
-   main()
-   {
-       int c, i, nwhite, nother;
-       int ndigit[10];
+    nwhite = nother = 0;
+    for (i = 0; i < 10; ++i)
+        ndigit[i] = 0;
 
-       nwhite = nother = 0;
-       for (i = 0; i < 10; ++i)
-           ndigit[i] = 0;
+    while ((c = getchar()) != EOF)
+        if (c >= '0' && c <= '9')
+            ++ndigit[c-'0'];
+        else if (c == ' ' || c == '\n' || c == '\t')
+            ++nwhite;
+        else
+            ++nother;
 
-       while ((c = getchar()) != EOF)
-           if (c >= '0' && c <= '9')
-               ++ndigit[c-'0'];
-           else if (c == ' ' || c == '\n' || c == '\t')
-               ++nwhite;
-           else
-               ++nother;
+    printf("digits =");
+    for (i = 0; i < 10; ++i)
+        printf(" %d", ndigit[i]);
+    printf(", white space = %d, other = %d\n",
+        nwhite, nother);
+}
+```
 
-       printf("digits =");
-       for (i = 0; i < 10; ++i)
-           printf(" %d", ndigit[i]);
-       printf(", white space = %d, other = %d\n",
-           nwhite, nother);
-   }
 The output of this program on itself is
 
-   digits = 9 3 0 0 0 0 0 0 0 1, white space = 123, other = 345
+```
+digits = 9 3 0 0 0 0 0 0 0 1, white space = 123, other = 345
+```
+
 The declaration
 
-   int ndigit[10];
-declares  ndigit to be an array of 10 integers. Array subscripts always start at zero in C, so
-the  elements  are  ndigit[0],  ndigit[1],  ...,  ndigit[9].  This  is  reflected  in  the  for
-loops that initialize and print the array.
+```c
+int ndigit[10];
+```
 
-A subscript can be any integer expression, which includes integer variables like i, and integer
-constants.
+declares `ndigit` to be an array of 10 integers. Array subscripts
+always start at zero in C, so the elements are `ndigit[0]`,
+`ndigit[1]`, ..., `ndigit[9]`.  This is reflected in the `for` loops
+that initialize and print the array.
 
-This particular program relies on the properties of the character representation of the digits.
-For example, the test
+A subscript can be any integer expression, which includes integer
+variables like `i`, and integer constants.
 
-   if (c >= '0' && c <= '9')
-determines whether the character in c is a digit. If it is, the numeric value of that digit is
+This particular program relies on the properties of the character
+representation of the digits.  For example, the test
 
-   c - '0'
-This  works  only  if  '0',  '1',  ...,  '9'  have  consecutive  increasing  values.  Fortunately,
-this is true for all character sets.
+```c
+if (c >= '0' && c <= '9')
+```
 
-By definition,  chars are just small integers, so char variables and constants are identical to
-ints  in  arithmetic  expressions.  This  is  natural  and  convenient;  for  example  c-'0'  is  an
-integer  expression  with  a  value  between  0  and  9  corresponding  to  the  character  '0'  to  '9'
-stored in c, and thus a valid subscript for the array ndigit.
+determines whether the character in `c` is a digit. If it is, the
+numeric value of that digit is
 
-The decision as to whether a character is a digit, white space, or something else is made with
-the sequence
+```c
+c - '0'
+```
 
+This works only if `'0'`, `'1'`, ..., `'9'` have consecutive
+increasing values.  Fortunately, this is true for all character sets.
 
+By definition, `char`s are just small integers, so `char` variables
+and constants are identical to `int`s in arithmetic expressions.  This
+is natural and convenient; for example `c-'0'` is an integer
+expression with a value between 0 and 9 corresponding to the character
+`'0'` to `'9'` stored in `c`, and thus a valid subscript for the array
+`ndigit`.
 
+The decision as to whether a character is a digit, white space, or
+something else is made with the sequence
 
+```c
+if (c >= '0' && c <= '9')
+    ++ndigit[c-'0'];
+else if (c == ' ' || c == '\n' || c == '\t')
+    ++nwhite;
+else
+    ++nother;
+```
 
-
-
-
-
-
-
-
-25
-
-   if (c >= '0' && c <= '9')
-       ++ndigit[c-'0'];
-   else if (c == ' ' || c == '\n' || c == '\t')
-       ++nwhite;
-   else
-       ++nother;
 The pattern
 
-   if (condition1)
-       statement1
-   else if (condition2)
-       statement2
-       ...
-       ...
-   else
-       statementn
-occurs frequently in programs as a way to express a multi-way decision. The conditions are
-evaluated  in  order  from  the  top  until  some  condition  is  satisfied;  at  that  point  the
-corresponding  statement  part  is  executed,  and  the  entire  construction  is  finished.  (Any
-statement can be several statements enclosed in braces.) If none of the conditions is satisfied,
-the statement after the final else is executed if it is present. If the final else and statement
-are omitted, as in the word count program, no action takes place. There can be any number of
+```c
+if (condition1)
+    statement1
+else if (condition2)
+    statement2
+    ...
+    ...
+else
+    statementn
+```
 
+occurs frequently in programs as a way to express a multi-way
+decision. The _conditions_ are evaluated in order from the top until
+some _condition_ is satisfied; at that point the corresponding
+_statement_ part is executed, and the entire construction is finished.
+(Any _statement_ can be several statements enclosed in braces.) If
+none of the conditions is satisfied, the _statement_ after the final
+`else` is executed if it is present. If the final `else` and
+_statement_ are omitted, as in the word count program, no action takes
+place. There can be any number of
+
+```c
 else if(condition)
   statement
+```
 
-groups between the initial if and the final else.
+groups between the initial if and the final `else`.
 
-As a matter of style, it is advisable to format this construction as we have shown; if each if
-were indented past the previous else, a long sequence of decisions would march off the right
-side of the page.
+As a matter of style, it is advisable to format this construction as
+we have shown; if each `if` were indented past the previous `else`, a
+long sequence of decisions would march off the right side of the page.
 
-The  switch statement, to be discussed in Chapter 4, provides another way to write a multi-
-way  branch  that  is  particulary  suitable  when  the  condition  is  whether  some  integer  or
-character expression matches one of a set of constants. For contrast, we will present a switch
+The `switch` statement, to be discussed in Chapter 4, provides another
+way to write a multi-way branch that is particulary suitable when the
+condition is whether some integer or character expression matches one
+of a set of constants. For contrast, we will present a `switch`
 version of this program in Section 3.4.
 
-Exercise 1-13. Write a program to print a histogram of the lengths of words in its input. It is
-easy to draw the histogram with the bars horizontal; a vertical orientation is more challenging.
+**Exercise 1-13**. Write a program to print a histogram of the lengths
+of words in its input. It is easy to draw the histogram with the bars
+horizontal; a vertical orientation is more challenging.
 
-Exercise 1-14. Write a program to print a histogram of the frequencies of different characters
-in its input.
+**Exercise 1-14**. Write a program to print a histogram of the
+frequencies of different characters in its input.
 
-1.7 Functions
+# 1.7 Functions
 
 In C, a function is equivalent to a subroutine or function in Fortran, or a procedure or function
 in Pascal. A function provides a convenient way to encapsulate some computation, which can
