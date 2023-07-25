@@ -50,7 +50,7 @@ mastered, everything else is comparatively easy.
 
 In C, the program to print "hello, world" is
 
-```c
+```
 #include <stdio.h>
 
 main()
@@ -101,7 +101,7 @@ somewhere.
 that you wrote, and others from libraries that are provided for
 you. The first line of the program,
 
-```c
+```
 #include <stdio.h>
 ```
 
@@ -118,7 +118,7 @@ that expects no arguments, which is indicated by the empty list `( )`.
 
 **The first C program**
 
-```c
+```
 // include information about standard library
 #include <stdio.h>
 
@@ -138,7 +138,7 @@ main()
 The statements of a function are enclosed in braces `{ }`. The function
 `main` contains only one statement,
 
-```c
+```
 printf("hello, world\n");
 ```
 
@@ -159,7 +159,7 @@ you will find that there is no line advance after the output is
 printed. You must use `\n` to include a newline character in the
 `printf` argument; if you try something like
 
-```c
+```
 printf("hello, world
 ");
 ```
@@ -170,7 +170,7 @@ the C compiler will produce an error message.
 calls may be used to build up an output line in stages. Our first
 program could just as well have been written
 
-```c
+```
 #include <stdio.h>
 
 main()
@@ -229,7 +229,7 @@ world"`, but not complicated.  It introduces several new ideas,
 including comments, declarations, variables, arithmetic expressions,
 loops , and formatted output.
 
-```c
+```
 #include <stdio.h>
 
 /* print Fahrenheit-Celsius table
@@ -254,7 +254,7 @@ main()
 
 The two lines
 
-```c
+```
 /* print Fahrenheit-Celsius table
     for fahr = 0, 20, ..., 300 */
 ```
@@ -270,7 +270,7 @@ the beginning of the function before any executable statements.  A
 _declaration_ announces the properties of variables; it consists of a
 name and a list of variables, such as
 
-```c
+```
 int fahr, celsius;
 int lower, upper, step;
 ```
@@ -300,7 +300,7 @@ in due course.
 Computation in the temperature conversion program begins with the
 _assignment statements_
 
-```c
+```
 lower = 0;
 upper = 300;
 step = 20;
@@ -312,7 +312,7 @@ statements are terminated by semicolons.
 Each line of the table is computed the same way, so we use a loop that
 repeats once per output line; this is the purpose of the `while` loop
 
-```c
+```
 while (fahr <= upper) {
    ...
 }
@@ -331,7 +331,7 @@ The body of a `while` can be one or more statements enclosed in
 braces, as in the temperature converter, or a single statement without
 braces, as in
 
-```c
+```
 while (i < j)
     i = 2 * i;
 ```
@@ -352,7 +352,7 @@ Most of the work gets done in the body of the loop. The Celsius
 temperature is computed and assigned to the variable celsius by the
 statement
 
-```c
+```
 celsius = 5 * (fahr-32) / 9;
 ```
 
