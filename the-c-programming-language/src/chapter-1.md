@@ -55,7 +55,7 @@ In C, the program to print "hello, world" is
 
 main()
 {
-  printf("hello, world\n");
+    printf("hello, world\n");
 }
 ```
 
@@ -128,10 +128,10 @@ main()
 
 // statements of `main` are enclosed in braces
 {
-  // `main` calls library function `printf`
-  // to print this sequence of characters
-  // `\n` represents the newline character
-  printf("hello, world\n");
+    // `main` calls library function `printf`
+    // to print this sequence of characters
+    // `\n` represents the newline character
+    printf("hello, world\n");
 }
 ```
 
@@ -175,172 +175,187 @@ program could just as well have been written
 
 main()
 {
-  printf("hello, ");
-  printf("world");
-  printf("\n");
+    printf("hello, ");
+    printf("world");
+    printf("\n");
 }
 ```
 
 to produce identical output.
 
-Notice  that  \n  represents  only  a  single  character.  An  escape  sequence  like  \n  provides  a
-general  and  extensible  mechanism  for  representing  hard-to-type  or  invisible  characters.
-Among the others that C provides are  \t for tab,  \b for backspace,  \" for the double quote
-and \\ for the backslash itself. There is a complete list in Section 2.3.
+Notice that `\n` represents only a single character.  An _escape
+sequence_ like `\n` provides a general and extensible mechanism for
+representing hard-to-type or invisible characters.  Among the others
+that C provides are `\t` for tab, `\b` for backspace, `\"` for the
+double quote and `\\` for the backslash itself. There is a complete
+list in Section 2.3.
 
-Exercise  1-1.  Run  the  "hello,  world"  program  on  your  system.  Experiment  with  leaving
-out parts of the program, to see what error messages you get.
+**Exercise 1-1**.  Run the "hello, world" program on your system.
+Experiment with leaving out parts of the program, to see what error
+messages you get.
 
-Exercise 1-2. Experiment to find out what happens when prints's argument string contains
-\c, where c is some character not listed above.
+**Exercise 1-2**. Experiment to find out what happens when `printf`'s
+argument string contains `\c`, where c is some character not listed
+above.
 
-1.2 Variables and Arithmetic Expressions
+# 1.2 Variables and Arithmetic Expressions
 
-The next program uses the formula oC=(5/9)(oF-32) to print the following table of Fahrenheit
-temperatures and their centigrade or Celsius equivalents:
+The next program uses the formula `°C=(5/9)(°F-32)` to print the
+following table of Fahrenheit temperatures and their centigrade or
+Celsius equivalents:
 
+```
+1    -17
+20   -6
+40   4
+60   15
+80   26
+100  37
+120  48
+140  60
+160  71
+180  82
+200  93
+220  104
+240  115
+260  126
+280  137
+300  148
+```
 
+The program itself still consists of the definition of a single
+function named `main`. It is longer than the one that printed `"hello,
+world"`, but not complicated.  It introduces several new ideas,
+including comments, declarations, variables, arithmetic expressions,
+loops , and formatted output.
 
+```c
+#include <stdio.h>
 
-
-
-12
-
-   1    -17
-   20   -6
-   40   4
-   60   15
-   80   26
-   100  37
-   120  48
-   140  60
-   160  71
-   180  82
-   200  93
-   220  104
-   240  115
-   260  126
-   280  137
-   300  148
-The program itself still consists of the definition of a single function named main. It is longer
-than  the  one  that  printed  "hello,  world",  but  not  complicated.  It  introduces  several  new
-ideas,  including  comments,  declarations,  variables,  arithmetic  expressions,  loops  ,  and
-formatted output.
-
-   #include <stdio.h>
-
-   /* print Fahrenheit-Celsius table
-       for fahr = 0, 20, ..., 300 */
-   main()
-   {
-     int fahr, celsius;
-     int lower, upper, step;
-
-     lower = 0;      /* lower limit of temperature scale */
-     upper = 300;    /* upper limit */
-     step = 20;      /* step size */
-
-     fahr = lower;
-     while (fahr <= upper) {
-         celsius = 5 * (fahr-32) / 9;
-         printf("%d\t%d\n", fahr, celsius);
-         fahr = fahr + step;
-     }
-   }
-The two lines
-
-  /* print Fahrenheit-Celsius table
-      for fahr = 0, 20, ..., 300 */
-are  a  comment,  which  in  this  case  explains  briefly  what  the  program  does.  Any  characters
-between /* and */ are ignored by the compiler; they may be used freely to make a program
-easier to understand. Comments may appear anywhere where a blank, tab or newline can.
-
-In  C,  all  variables  must  be  declared  before  they  are  used,  usually  at  the  beginning  of  the
-function  before  any  executable  statements.  A  declaration  announces  the  properties  of
-variables; it consists of a name and a list of variables, such as
-
+/* print Fahrenheit-Celsius table
+    for fahr = 0, 20, ..., 300 */
+main()
+{
     int fahr, celsius;
     int lower, upper, step;
-The  type  int  means  that  the  variables  listed  are  integers;  by  contrast  with  float,  which
-means floating point, i.e., numbers that may have a fractional part. The range of both int and
-float  depends  on  the  machine  you  are  using;  16-bits  ints,  which  lie  between  -32768  and
 
+    lower = 0;      /* lower limit of temperature scale */
+    upper = 300;    /* upper limit */
+    step = 20;      /* step size */
 
-
-
-
-
-
-
-
-
-+32767, are common, as are 32-bit ints. A float number is typically a 32-bit quantity, with
-at least six significant digits and magnitude generally between about 10-38 and 1038.
-
-C provides several other data types besides int and float, including:
-
-13
-
- character - a single byte
-
- char
- short     short integer
- long integer
-
- long
- double    double-precision floating point
-
-The  size  of  these  objects  is  also  machine-dependent.  There  are  also  arrays,  structures  and
-unions of these basic types, pointers to them, and functions that return them, all of which we
-will meet in due course.
-
-Computation in the temperature conversion program begins with the assignment statements
-
-    lower = 0;
-    upper = 300;
-    step = 20;
-which  set  the  variables  to  their  initial  values.  Individual  statements  are  terminated  by
-semicolons.
-
-Each line of the table is computed the same way, so we use a loop that repeats once per output
-line; this is the purpose of the while loop
-
+    fahr = lower;
     while (fahr <= upper) {
-       ...
+        celsius = 5 * (fahr-32) / 9;
+        printf("%d\t%d\n", fahr, celsius);
+        fahr = fahr + step;
     }
-The while loop operates as follows: The condition in parentheses is tested. If it is true (fahr
-is less than or equal to upper), the body of the loop (the three statements enclosed in braces)
-is executed. Then the condition is re-tested, and if true, the body is executed again. When the
-test  becomes  false  (fahr  exceeds  upper)  the  loop  ends,  and  execution  continues  at  the
-statement  that  follows  the  loop.  There  are  no  further  statements  in  this  program,  so  it
+}
+```
+
+The two lines
+
+```c
+/* print Fahrenheit-Celsius table
+    for fahr = 0, 20, ..., 300 */
+```
+
+are a _comment_, which in this case explains briefly what the program
+does.  Any characters between `/*` and `*/` are ignored by the
+compiler; they may be used freely to make a program easier to
+understand. Comments may appear anywhere where a blank, tab or newline
+can.
+
+In C, all variables must be declared before they are used, usually at
+the beginning of the function before any executable statements.  A
+_declaration_ announces the properties of variables; it consists of a
+name and a list of variables, such as
+
+```c
+int fahr, celsius;
+int lower, upper, step;
+```
+
+The type `int` means that the variables listed are integers; by
+contrast with `float`, which means floating point, i.e., numbers that
+may have a fractional part. The range of both `int` and `float`
+depends on the machine you are using; 16-bits `int`s, which lie
+between -32768 and +32767, are common, as are 32-bit `int`s. A `float`
+number is typically a 32-bit quantity, with at least six significant
+digits and magnitude generally between about 10^-38 and 10^+38.
+
+C provides several other data types besides `int` and `float`, including:
+
+| type     | meaning                         |
+|----------|---------------------------------|
+| `char`   | character - a single byte       |
+| `short`  | short integer                   |
+| `long`   | long integer                    |
+| `double` | double-precision floating point |
+
+The size of these objects is also machine-dependent.  There are also
+_arrays_, _structures_ and _unions_ of these basic types, _pointers_
+to them, and _functions_ that return them, all of which we will meet
+in due course.
+
+Computation in the temperature conversion program begins with the
+_assignment statements_
+
+```c
+lower = 0;
+upper = 300;
+step = 20;
+```
+
+which set the variables to their initial values.  Individual
+statements are terminated by semicolons.
+
+Each line of the table is computed the same way, so we use a loop that
+repeats once per output line; this is the purpose of the `while` loop
+
+```c
+while (fahr <= upper) {
+   ...
+}
+```
+
+The `while` loop operates as follows: The condition in parentheses is
+tested. If it is true (`fahr` is less than or equal to `upper`), the
+body of the loop (the three statements enclosed in braces) is
+executed. Then the condition is re-tested, and if true, the body is
+executed again. When the test becomes false (`fahr` exceeds `upper`)
+the loop ends, and execution continues at the statement that follows
+the loop.  There are no further statements in this program, so it
 terminates.
 
-The body of a while can be one or more statements enclosed in braces, as in the temperature
-converter, or a single statement without braces, as in
+The body of a `while` can be one or more statements enclosed in
+braces, as in the temperature converter, or a single statement without
+braces, as in
 
-   while (i < j)
-       i = 2 * i;
-In either case, we will always indent the statements controlled by the while by one tab stop
-(which we have shown as four spaces) so you can see at a glance which statements are inside
-the  loop.  The  indentation  emphasizes  the  logical  structure  of  the  program.  Although  C
-compilers do not care about how a program looks, proper indentation and spacing are critical
-in making programs easy for people to read. We recommend writing only one statement per
-line,  and  using  blanks  around  operators  to  clarify  grouping.  The  position  of  braces  is  less
-important,  although  people  hold  passionate  beliefs.  We  have  chosen  one  of  several  popular
-styles. Pick a style that suits you, then use it consistently.
+```c
+while (i < j)
+    i = 2 * i;
+```
 
+In either case, we will always indent the statements controlled by the
+`while` by one tab stop (which we have shown as four spaces) so you
+can see at a glance which statements are inside the loop.  The
+indentation emphasizes the logical structure of the program.  Although
+C compilers do not care about how a program looks, proper indentation
+and spacing are critical in making programs easy for people to
+read. We recommend writing only one statement per line, and using
+blanks around operators to clarify grouping.  The position of braces
+is less important, although people hold passionate beliefs.  We have
+chosen one of several popular styles. Pick a style that suits you,
+then use it consistently.
 
+Most of the work gets done in the body of the loop. The Celsius
+temperature is computed and assigned to the variable celsius by the
+statement
 
+```c
+celsius = 5 * (fahr-32) / 9;
+```
 
-
-
-
-Most of the work gets done in the body of the loop. The Celsius temperature is computed and
-assigned to the variable celsius by the statement
-
-14
-
-        celsius = 5 * (fahr-32) / 9;
 The reason for multiplying by 5 and dividing by 9 instead of just multiplying by 5/9 is that in
 C,  as  in  many  other  languages,  integer  division  truncates:  any  fractional  part  is  discarded.
 Since 5 and 9 are integers. 5/9 would be truncated to zero and so all the Celsius temperatures
