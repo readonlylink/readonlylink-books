@@ -890,64 +890,67 @@ boundary conditions.
 
 ## 1.5.3 Line Counting
 
-The  next  program  counts  input  lines.  As  we  mentioned  above,  the  standard  library  ensures
-that an input text stream appears as a sequence of lines, each terminated by a newline. Hence,
-counting lines is just counting newlines:
+The next program counts input lines.  As we mentioned above, the
+standard library ensures that an input text stream appears as a
+sequence of lines, each terminated by a newline. Hence, counting lines
+is just counting newlines:
 
-   #include <stdio.h>
+```c
+#include <stdio.h>
 
-   /* count lines in input */
-   main()
-   {
-       int c, nl;
+/* count lines in input */
+main()
+{
+    int c, nl;
 
-       nl = 0;
-       while ((c = getchar()) != EOF)
-           if (c == '\n')
-               ++nl;
-       printf("%d\n", nl);
-   }
-The body of the while now consists of an if, which in turn controls the increment ++nl. The
-if  statement  tests  the  parenthesized  condition,  and  if  the  condition  is  true,  executes  the
-statement  (or  group  of  statements  in  braces)  that  follows.  We  have  again  indented  to  show
-what is controlled by what.
+    nl = 0;
+    while ((c = getchar()) != EOF)
+        if (c == '\n')
+            ++nl;
+    printf("%d\n", nl);
+}
+```
 
-The  double  equals  sign  ==  is  the  C  notation  for  "is  equal  to"  (like  Pascal's  single  =  or
-Fortran's .EQ.). This symbol is used to distinguish the equality test from the single = that C
-uses  for  assignment.  A  word  of  caution:  newcomers  to  C  occasionally  write  =  when  they
-mean ==. As we will see in Chapter 2, the result is usually a legal expression, so you will get
-no warning.
+The body of the `while` now consists of an `if`, which in turn
+controls the increment `++nl`. The `if` statement tests the
+parenthesized condition, and if the condition is true, executes the
+statement (or group of statements in braces) that follows.  We have
+again indented to show what is controlled by what.
 
-A character written between single quotes represents an integer value equal to the numerical
-value  of  the  character  in  the  machine's  character  set.  This  is  called  a  character  constant,
-although  it  is  just  another  way  to  write  a  small  integer.  So,  for  example,  'A'  is  a  character
-constant; in the ASCII character set its value is 65, the internal representation of the character
-A. Of course, 'A' is to be preferred over 65: its meaning is obvious, and it is independent of a
-particular character set.
+The double equals sign `==` is the C notation for "is equal to" (like
+Pascal's single `=` or Fortran's `.EQ`.). This symbol is used to
+distinguish the equality test from the single `=` that C uses for
+assignment.  A word of caution: newcomers to C occasionally write `=`
+when they mean `==`. As we will see in Chapter 2, the result is
+usually a legal expression, so you will get no warning.
 
+A character written between single quotes represents an integer value
+equal to the numerical value of the character in the machine's
+character set.  This is called a _character constant_, although it is
+just another way to write a small integer.  So, for example, `'A'` is
+a character constant; in the ASCII character set its value is 65, the
+internal representation of the character `A`. Of course, `'A'` is to
+be preferred over `65`: its meaning is obvious, and it is independent
+of a particular character set.
 
+The escape sequences used in string constants are also legal in
+character constants, so `'\n'` stands for the value of the newline
+character, which is 10 in ASCII. You should note carefully that `'\n'`
+is a single character, and in expressions is just an integer; on the
+other hand, `'\n'` is a string constant that happens to contain only
+one character.  The topic of strings versus characters is discussed
+further in Chapter 2.
 
+**Exercise 1-8**. Write a program to count blanks, tabs, and newlines.
 
+**Exercise 1-9**. Write a program to copy its input to its output,
+replacing each string of one or more blanks by a single blank.
 
+**Exercise 1-10**. Write a program to copy its input to its output,
+replacing each tab by `\t`, each backspace by `\b`, and each backslash
+by `\\`.  This makes tabs and backspaces visible in an unambiguous way.
 
-22
-
-The escape sequences used in string constants are also legal in character constants, so '\n'
-stands for the value of the newline character, which is 10 in ASCII. You should note carefully
-that '\n' is a single character, and in expressions is just an integer; on the other hand, '\n' is
-a  string  constant  that  happens  to  contain  only  one  character.  The  topic  of  strings  versus
-characters is discussed further in Chapter 2.
-
-Exercise 1-8. Write a program to count blanks, tabs, and newlines.
-
-Exercise 1-9. Write a program to copy its input to its output, replacing each string of one or
-more blanks by a single blank.
-
-Exercise 1-10. Write a program to copy its input to its output, replacing each tab by \t, each
-backspace  by  \b,  and  each  backslash  by  \\.  This  makes  tabs  and  backspaces  visible  in  an
-unambiguous way.
-
-1.5.4 Word Counting
+## 1.5.4 Word Counting
 
 The fourth in our series of useful programs counts lines, words, and characters, with the loose
 definition  that  a  word  is  any  sequence  of  characters  that  does  not  contain  a  blank,  tab  or
