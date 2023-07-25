@@ -1389,7 +1389,7 @@ used to some other languages, particulary Fortran.  In C, all function
 arguments are passed "by value."  This means that the called function
 is given the values of its arguments in temporary variables rather
 than the originals. This leads to some different properties than are
-seen with "call by reference" languages like Fortran or with var
+seen with "call by reference" languages like Fortran or with `var`
 parameters in Pascal, in which the called routine has access to the
 original argument, not a local copy.
 
@@ -1455,9 +1455,9 @@ pieces.  One piece gets a new line, another saves it, and the rest
 controls the process.
 
 Since things divide so nicely, it would be well to write them that way
-too. Accordingly, let us first write a separate function getline to
+too. Accordingly, let us first write a separate function `getline` to
 fetch the next line of input. We will try to make the function useful
-in other contexts.  At the minimum, getline has to return a signal
+in other contexts.  At the minimum, `getline` has to return a signal
 about possible end of file; a more useful design would be to return
 the length of the line, or zero if end of file is encountered. Zero is
 an acceptable end-of-file return because it is never a valid line
@@ -1465,11 +1465,11 @@ length. Every text line has at least one character; even a line
 containing only a newline has length 1.
 
 When we find a line that is longer than the previous longest line, it
-must be saved somewhere.  This suggests a second function, copy, to
+must be saved somewhere.  This suggests a second function, `copy`, to
 copy the new line to a safe place.
 
-Finally, we need a main program to control getline and copy. Here is
-the result.
+Finally, we need a main program to control `getline` and `copy`. Here
+is the result.
 
 ```c
 #include <stdio.h>
@@ -1523,63 +1523,64 @@ void copy(char to[], char from[])
 }
 ```
 
-The functions getline and copy are declared at the beginning of the
+The functions `getline` and `copy` are declared at the beginning of the
 program, which we assume is contained in one file.
 
-main and getline communicate through a pair of arguments and a
-returned value.  In getline, the arguments are declared by the line
+`main` and `getline` communicate through a pair of arguments and a
+returned value.  In `getline`, the arguments are declared by the line
 
 ```c
 int getline(char s[], int lim);
 ```
 
-which specifies that the first argument, s, is an array, and the
-second, lim, is an integer. The purpose of supplying the size of an
+which specifies that the first argument, `s`, is an array, and the
+second, `lim`, is an integer. The purpose of supplying the size of an
 array in a declaration is to set aside storage. The length of an array
-s is not necessary in getline since its size is set in main. getline
-uses return to send a value back to the caller, just as the function
-power did.  This line also declares that getline returns an int; since
-int is the default return type, it could be omitted.
+s is not necessary in `getline` since its size is set in
+`main`. `getline` uses `return` to send a value back to the caller,
+just as the function `power` did.  This line also declares that
+`getline` returns an `int`; since `int` is the default return type, it
+could be omitted.
 
-Some functions return a useful value; others, like copy, are used only
-for their effect and return no value.  The return type of copy is
-void, which states explicitly that no value is returned.
+Some functions return a useful value; others, like `copy`, are used
+only for their effect and return no value.  The return type of `copy`
+is `void`, which states explicitly that no value is returned.
 
-getline puts the character '\0' (the null character, whose value is
-zero) at the end of the array it is creating, to mark the end of the
-string of characters. This conversion is also used by the C language:
-when a string constant like
+`getline` puts the character `'\0'` (the _null character_, whose value
+is zero) at the end of the array it is creating, to mark the end of
+the string of characters. This conversion is also used by the C
+language: when a string constant like
 
 ```c
 "hello\n"
 ```
 
 appears in a C program, it is stored as an array of characters
-containing the characters in the string and terminated with a '\0' to
-mark the end.
+containing the characters in the string and terminated with a `'\0'`
+to mark the end.
 
 ```
 | h | e | l | l | o | \n | \0 |
 ```
 
-The %s format specification in printf expects the corresponding
-argument to be a string represented in this form. copy also relies on
-the fact that its input argument is terminated with a '\0', and it
-copies this character into the output argument (All of this implies
-that '\0' is not a part of normal text).
+The `%s` format specification in `printf` expects the corresponding
+argument to be a string represented in this form. `copy` also relies
+on the fact that its input argument is terminated with a `'\0'`, and
+it copies this character into the output argument (All of this implies
+that `'\0'` is not a part of normal text).
 
 It is worth mentioning in passing that even a program as small as this
 one presents some sticky design problems.  For example, what should
-main do if it encounters a line which is bigger than its limit?
-getline works safely, in that it stops collecting when the array is
+`main` do if it encounters a line which is bigger than its limit?
+`getline` works safely, in that it stops collecting when the array is
 full, even if no newline has been seen. By testing the length and the
-last character returned, main can determine whether the line was too
+last character returned, `main` can determine whether the line was too
 long, and then cope as it wishes. In the interests of brevity, we have
 ignored this issue.
 
-There is no way for a user of getline to know in advance how long an
-input line might be, so getline checks for overflow. On the other
-hand, the user of copy already knows (or can find out) how big the
+There is no way for a user of `getline` to know in advance how long an
+input line might be, so `getline` checks for overflow. On the other
+hand, the user of `copy` already knows (or can find out) how big the
 strings are, so we have chosen not to add error checking to it.
 
 **Exercise 1-16**. Revise the main routine of the longest-line program
@@ -1592,23 +1593,23 @@ longer than 80 characters.
 **Exercise 1-18**. Write a program to remove trailing blanks and tabs
 from each line of input, and to delete entirely blank lines.
 
-**Exercise 1-19**. Write a function reverse(s) that reverses the
-character string s.  Use it to write a program that reverses its input
-a line at a time.
+**Exercise 1-19**. Write a function `reverse(s)` that reverses the
+character string `s`.  Use it to write a program that reverses its
+input a line at a time.
 
 # 1.10 External Variables and Scope
 
-The variables in main, such as line, longest, etc., are private or
-local to main. Because they are declared within main, no other
+The variables in `main`, such as `line`, `longest`, etc., are private
+or local to `main`. Because they are declared within `main`, no other
 function can have direct access to them. The same is true of the
-variables in other functions; for example, the variable i in getline
-is unrelated to the i in copy.  Each local variable in a function
-comes into existence only when the function is called, and disappears
-when the function is exited.  This is why such variables are usually
-known as automatic variables, following terminology in other
-languages.  We will use the term automatic henceforth to refer to
-these local variables. (Chapter 4 discusses the static storage class,
-in which local variables do retain their values between calls.)
+variables in other functions; for example, the variable `i` in
+`getline` is unrelated to the `i` in `copy`.  Each local variable in a
+function comes into existence only when the function is called, and
+disappears when the function is exited.  This is why such variables
+are usually known as _automatic_ variables, following terminology in
+other languages.  We will use the term automatic henceforth to refer
+to these local variables. (Chapter 4 discusses the `static` storage
+class, in which local variables do retain their values between calls.)
 
 Because automatic variables come and go with function invocation, they
 do not retain their values from one call to the next, and must be
@@ -1616,24 +1617,24 @@ explicitly set upon each entry. If they are not set, they will contain
 garbage.
 
 As an alternative to automatic variables, it is possible to define
-variables that are external to all functions, that is, variables that
-can be accessed by name by any function.  (This mechanism is rather
-like Fortran COMMON or Pascal variables declared in the outermost
-block.)  Because external variables are globally accessible, they can
-be used instead of argument lists to communicate data between
+variables that are _external_ to all functions, that is, variables
+that can be accessed by name by any function.  (This mechanism is
+rather like Fortran COMMON or Pascal variables declared in the
+outermost block.)  Because external variables are globally accessible,
+they can be used instead of argument lists to communicate data between
 functions.  Furthermore, because external variables remain in
 existence permanently, rather than appearing and disappearing as
 functions are called and exited, they retain their values even after
 the functions that set them have returned.
 
-An external variable must be defined, exactly once, outside of any
+An external variable must be _defined_, exactly once, outside of any
 function; this sets aside storage for it. The variable must also be
-declared in each function that wants to access it; this states the
-type of the variable. The declaration may be an explicit extern
+_declared_ in each function that wants to access it; this states the
+type of the variable. The declaration may be an explicit `extern`
 statement or may be implicit from context.  To make the discussion
-concrete, let us rewrite the longest-line program with line, longest,
-and max as external variables. This requires changing the calls,
-declarations, and bodies of all three functions.
+concrete, let us rewrite the longest-line program with `line`,
+`longest`, and `max` as external variables. This requires changing the
+calls, declarations, and bodies of all three functions.
 
 ```c
 #include <stdio.h>
@@ -1694,58 +1695,61 @@ void copy(void)
 }
 ```
 
-The external variables in main, getline and copy are defined by the
-first lines of the example above, which state their type and cause
+The external variables in `main`, `getline` and `copy` are defined by
+the first lines of the example above, which state their type and cause
 storage to be allocated for them.  Syntactically, external definitions
 are just like definitions of local variables, but since they occur
 outside of functions, the variables are external. Before a function
 can use an external variable, the name of the variable must be made
-known to the function; the declaration is the same as before except
-for the added keyword extern.
+known to the function. One way to do this is to write an `extern`
+declaration in the function; the declaration is the same as before
+except for the added keyword `extern`.
 
-In certain circumstances, the extern declaration can be omitted.  If
+In certain circumstances, the `extern` declaration can be omitted.  If
 the definition of the external variable occurs in the source file
 before its use in a particular function, then there is no need for an
-extern declaration in the function. The extern declarations in main,
-getline and copy are thus redundant. In fact, common practice is to
+`extern` declaration in the function. The `extern` declarations in `main`,
+`getline` and `copy` are thus redundant. In fact, common practice is to
 place definitions of all external variables at the beginning of the
-source file, and then omit all extern declarations.
+source file, and then omit all `extern` declarations.
 
 If the program is in several source files, and a variable is defined
-in file1 and used in file2 and file3, then extern declarations are
-needed in file2 and file3 to connect the occurrences of the
-variable. The usual practice is to collect extern declarations of
+in _file1_ and used in _file2_ and _file3_, then `extern` declarations
+are needed in _file2_ and _file3_ to connect the occurrences of the
+variable. The usual practice is to collect `extern` declarations of
 variables and functions in a separate file, historically called a
-header, that is included by #include at the front of each source file.
-The suffix .h is conventional for header names.  The functions of the
-standard library, for example, are declared in headers like
-<stdio.h>. This topic is discussed at length in Chapter 4, and the
-library itself in Chapter 7 and Appendix B.
+_header_, that is included by `#include` at the front of each source
+file.  The suffix `.h` is conventional for header names.  The
+functions of the standard library, for example, are declared in
+headers like `<stdio.h>`. This topic is discussed at length in Chapter
+4, and the library itself in Chapter 7 and Appendix B.
 
-Since the specialized versions of getline and copy have no arguments,
-logic would suggest that their prototypes at the beginning of the file
-should be getline() and copy().  But for compatibility with older C
-programs the standard takes an empty list as an old-style declaration,
-and turns off all argument list checking; the word void must be used
-for an explicitly empty list. We will discuss this further in Chapter 4.
+Since the specialized versions of `getline` and `copy` have no
+arguments, logic would suggest that their prototypes at the beginning
+of the file should be `getline()` and `copy()`.  But for compatibility
+with older C programs the standard takes an empty list as an old-style
+declaration, and turns off all argument list checking; the word `void`
+must be used for an explicitly empty list. We will discuss this
+further in Chapter 4.
 
-You should note that we are using the words definition and declaration
-carefully when we refer to external variables in this
-section."Definition" refers to the place where the variable is created
-or assigned storage; "declaration" refers to places where the nature
-of the variable is stated but no storage is allocated.
+You should note that we are using the words _definition_ and
+_declaration_ carefully when we refer to external variables in this
+section. "Definition" refers to the place where the variable is
+created or assigned storage; "declaration" refers to places where the
+nature of the variable is stated but no storage is allocated.
 
-By the way, there is a tendency to make everything in sight an extern
-variable because it appears to simplify communications - argument
-lists are short and variables are always there when you want them. But
-external variables are always there even when you don't want them.
-Relying too heavily on external variables is fraught with peril since
-it leads to programs whose data connections are not all obvious -
-variables can be changed in unexpected and even inadvertent ways, and
-the program is hard to modify. The second version of the longest-line
-program is inferior to the first, partly for these reasons, and partly
-because it destroys the generality of two useful functions by writing
-into them the names of the variables they manipulate.
+By the way, there is a tendency to make everything in sight an
+`extern` variable because it appears to simplify communications -
+argument lists are short and variables are always there when you want
+them. But external variables are always there even when you don't want
+them.  Relying too heavily on external variables is fraught with peril
+since it leads to programs whose data connections are not all
+obvious - variables can be changed in unexpected and even inadvertent
+ways, and the program is hard to modify. The second version of the
+longest-line program is inferior to the first, partly for these
+reasons, and partly because it destroys the generality of two useful
+functions by writing into them the names of the variables they
+manipulate.
 
 At this point we have covered what might be called the conventional
 core of C.  With this handful of building blocks, it's possible to
@@ -1754,16 +1758,16 @@ good idea if you paused long enough to do so. These exercises suggest
 programs of somewhat greater complexity than the ones earlier in this
 chapter.
 
-**Exercise 1-20**. Write a program detab that replaces tabs in the
+**Exercise 1-20**. Write a program `detab` that replaces tabs in the
 input with the proper number of blanks to space to the next tab
 stop. Assume a fixed set of tab stops, say every n columns.  Should n
 be a variable or a symbolic parameter?
 
-**Exercise 1-21**.  Write a program entab that replaces strings of
+**Exercise 1-21**. Write a program `entab` that replaces strings of
 blanks by the minimum number of tabs and blanks to achieve the same
-spacing. Use the same tab stops as for detab.  When either a tab or a
-single blank would suffice to reach a tab stop, which should be given
-preference?
+spacing. Use the same tab stops as for `detab`.  When either a tab or
+a single blank would suffice to reach a tab stop, which should be
+given preference?
 
 **Exercise 1-22**. Write a program to "fold" long input lines into two
 or more shorter lines after the last non-blank character that occurs
@@ -1775,7 +1779,7 @@ or tabs before the specified column.
 program. Don't forget to handle quoted strings and character constants
 properly. C comments don't nest.
 
-**Exercise 1-24**.  Write a program to check a C program for
+**Exercise 1-24**. Write a program to check a C program for
 rudimentary syntax errors like unmatched parentheses, brackets and
 braces.  Don't forget about quotes, both single and double, escape
 sequences, and comments.  (This program is hard if you do it in full
