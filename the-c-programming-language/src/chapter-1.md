@@ -937,7 +937,7 @@ The escape sequences used in string constants are also legal in
 character constants, so `'\n'` stands for the value of the newline
 character, which is 10 in ASCII. You should note carefully that `'\n'`
 is a single character, and in expressions is just an integer; on the
-other hand, `'\n'` is a string constant that happens to contain only
+other hand, `"\n"` is a string constant that happens to contain only
 one character.  The topic of strings versus characters is discussed
 further in Chapter 2.
 
