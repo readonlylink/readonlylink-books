@@ -1196,172 +1196,193 @@ frequencies of different characters in its input.
 
 # 1.7 Functions
 
-In C, a function is equivalent to a subroutine or function in Fortran, or a procedure or function
-in Pascal. A function provides a convenient way to encapsulate some computation, which can
-then be used without worrying about its implementation. With properly designed functions, it
-is possible to ignore how a job is done; knowing what is done is sufficient. C makes the sue of
-functions easy, convinient and efficient; you will often see a short function defined and called
-only once, just because it clarifies some piece of code.
+In C, a function is equivalent to a subroutine or function in Fortran,
+or a procedure or function in Pascal. A function provides a convenient
+way to encapsulate some computation, which can then be used without
+worrying about its implementation. With properly designed functions,
+it is possible to ignore _how_ a job is done; knowing _what_ is done
+is sufficient. C makes the sue of functions easy, convinient and
+efficient; you will often see a short function defined and called only
+once, just because it clarifies some piece of code.
 
+So far we have used only functions like `printf`, `getchar` and
+`putchar` that have been provided for us; now it's time to write a few
+of our own.  Since C has no exponentiation operator like the `**` of
+Fortran, let us illustrate the mechanics of function definition by
+writing a function `power(m,n)` to raise an integer `m` to a positive
+integer power `n`. That is, the value of `power(2,5)` is 32.  This
+function is not a practical exponentiation routine, since it handles
+only positive powers of small integers, but it's good enough for
+illustration.(The standard library contains a function `pow(x,y)` that
+computes `x^y`.)
 
+Here is the function `power` and a main program to exercise it, so you
+can see the whole structure at once.
 
+```c
+#include <stdio.h>
 
+int power(int m, int n);
 
-26
+/* test power function */
+main()
+{
+    int i;
 
-So  far  we  have  used  only  functions  like  printf,  getchar  and  putchar  that  have  been
-provided  for  us;  now  it's  time  to  write  a  few  of  our  own.  Since  C  has  no  exponentiation
-operator like the ** of Fortran, let us illustrate the mechanics of function definition by writing
-a function power(m,n) to raise an integer m to a positive integer power n. That is, the value of
-power(2,5)  is  32.  This  function  is  not  a  practical  exponentiation  routine,  since  it  handles
-only  positive  powers  of  small  integers,  but  it's  good  enough  for  illustration.(The  standard
-library contains a function pow(x,y) that computes xy.)
+    for (i = 0; i < 10; ++i)
+        printf("%d %d %d\n", i, power(2,i), power(-3,i));
+    return 0;
+}
 
-Here  is  the  function  power  and  a  main  program  to  exercise  it,  so  you  can  see  the  whole
-structure at once.
+/* power:  raise base to n-th power; n >= 0 */
+int power(int base, int n)
+{
+    int i,  p;
 
-   #include <stdio.h>
+    p = 1;
+    for (i = 1; i <= n; ++i)
+        p = p * base;
+    return p;
+}
+```
 
-   int power(int m, int n);
-
-    /* test power function */
-    main()
-    {
-        int i;
-
-        for (i = 0; i < 10; ++i)
-            printf("%d %d %d\n", i, power(2,i), power(-3,i));
-        return 0;
-    }
-
-    /* power:  raise base to n-th power; n >= 0 */
-    int power(int base, int n)
-    {
-        int i,  p;
-
-        p = 1;
-        for (i = 1; i <= n; ++i)
-            p = p * base;
-        return p;
-    }
 A function definition has this form:
 
+```c
 return-type function-name(parameter declarations, if any)
 {
    declarations
    statements
 }
-Function definitions can appear in any order, and in one source file or several, although no
-function  can  be  split  between  files.  If  the  source  program  appears  in  several  files,  you  may
-have to say more to compile and load it than if it all appears in one, but that is an operating
-system matter, not a language attribute. For the moment, we will assume that both functions
-are in the same file, so whatever you have learned about running C programs will still work.
+```
 
-The function power is called twice by main, in the line
+Function definitions can appear in any order, and in one source file
+or several, although no function can be split between files.  If the
+source program appears in several files, you may have to say more to
+compile and load it than if it all appears in one, but that is an
+operating system matter, not a language attribute. For the moment, we
+will assume that both functions are in the same file, so whatever you
+have learned about running C programs will still work.
 
-   printf("%d %d %d\n", i, power(2,i), power(-3,i));
-Each call passes two arguments to power, which each time returns an integer to be formatted
-and printed. In an expression, power(2,i) is an integer just as 2 and i are. (Not all functions
-produce an integer value; we will take this up in Chapter 4.)
+The function `power` is called twice by `main`, in the line
+
+```c
+printf("%d %d %d\n", i, power(2,i), power(-3,i));
+```
+
+Each call passes two arguments to `power`, which each time returns an
+integer to be formatted and printed. In an expression, `power(2,i)` is
+an integer just as 2 and `i` are. (Not all functions produce an integer
+value; we will take this up in Chapter 4.)
 
 The first line of power itself,
 
+```c
+int power(int base, int n)
+```
 
+declares the parameter types and names, and the type of the result
+that the function returns.  The names used by `power` for its
+parameters are local to `power`, and are not visible to any other
+function: other routines can use the same names without conflict. This
+is also true of the variables `i` and `p`: the `i` in `power` is
+unrelated to the `i` in `main`.
 
+We will generally use _parameter_ for a variable named in the
+parenthesized list in a function definition, and _argument_ for the
+value used in a call of the function.  The terms _formal argument_ and
+_actual argument_ are sometimes used for the same distinction.
 
+The value that `power` computes is returned to `main` by the `return`
+statement. Any expression may follow `return`:
 
+```c
+return expression;
+```
 
+A function need not return a value; a return statement with no
+expression causes control, but no useful value, to be returned to the
+caller, as does "falling off the end" of a function by reaching the
+terminating right brace. And the calling function can ignore a value
+returned by a function.
 
-
-
-
-
-27
-
-    int power(int base, int n)
-declares the parameter types and names, and the type of the result that the function returns.
-The  names  used  by  power  for  its  parameters  are  local  to  power,  and  are  not  visible  to  any
-other function: other routines can use the same names without conflict. This is also true of the
-variables i and p: the i in power is unrelated to the i in main.
-
-We will generally use parameter for a variable named in the parenthesized list in a function.
-The terms formal argument and actual argument are sometimes used for the same distinction.
-
-The value that power computes is returned to main by the return: statement. Any expression
-may follow return:
-
-   return expression;
-A function need not return a value; a return statement with no expression causes control, but
-no  useful  value,  to  be  returned  to  the  caller,  as  does  "falling  off  the  end"  of  a  function  by
-reaching the terminating right brace. And the calling function can ignore a value returned by a
-function.
-
-You may have noticed that there is a  return statement at the end of  main. Since  main is a
-function like any other, it may return a value to its caller, which is in effect the environment in
-which  the  program  was  executed.  Typically,  a  return  value  of  zero  implies  normal
-termination;  non-zero  values  signal  unusual  or  erroneous  termination  conditions.  In  the
-interests of simplicity, we have omitted return statements from our main functions up to this
-point, but we will include them hereafter, as a reminder that programs should return status to
-their environment.
+You may have noticed that there is a return statement at the end of
+main. Since main is a function like any other, it may return a value
+to its caller, which is in effect the environment in which the program
+was executed.  Typically, a return value of zero implies normal
+termination; non-zero values signal unusual or erroneous termination
+conditions.  In the interests of simplicity, we have omitted return
+statements from our main functions up to this point, but we will
+include them hereafter, as a reminder that programs should return
+status to their environment.
 
 The declaration
 
-    int power(int base, int n);
-just before main says that power is a function that expects two int arguments and returns an
-int.  This  declaration,  which  is  called  a  function  prototype,  has  to  agree  with  the  definition
-and uses of power. It is an error if the definition of a function or any uses of it do not agree
-with its prototype.
+```c
+int power(int base, int n);
+```
 
-parameter  names  need  not  agree.  Indeed,  parameter  names  are  optional  in  a  function
-prototype, so for the prototype we could have written
+just before main says that power is a function that expects two int
+arguments and returns an int.  This declaration, which is called a
+function prototype, has to agree with the definition and uses of
+power. It is an error if the definition of a function or any uses of
+it do not agree with its prototype.
 
-    int power(int, int);
+
+Parameter names need not agree.  Indeed, parameter names are optional
+in a function prototype, so for the prototype we could have written
+
+```c
+int power(int, int);
+```
+
 Well-chosen names are good documentation however, so we will often use them.
 
-A note of history: the biggest change between ANSI C and earlier versions is how functions
-are declared and defined. In the original definition of C, the power function would have been
-written like this:
+A note of history: the biggest change between ANSI C and earlier
+versions is how functions are declared and defined. In the original
+definition of C, the power function would have been written like this:
 
+```c
+/* power:  raise base to n-th power; n >= 0 */
+/*         (old-style version) */
+power(base, n)
+int base, n;
+{
+    int i, p;
 
+    p = 1;
+    for (i = 1; i <= n; ++i)
+        p = p * base;
+    return p;
+}
+```
 
+The parameters are named between the parentheses, and their types are
+declared before opening the left brace; undeclared parameters are
+taken as int. (The body of the function is the same as before.)
 
+The declaration of power at the beginning of the program would have
+looked like this:
 
+```c
+int power();
+```
 
+No parameter list was permitted, so the compiler could not readily
+check that power was being called correctly. Indeed, since by default
+power would have been assumed to return an int, the entire declaration
+might well have been omitted.
 
-28
+The new syntax of function prototypes makes it much easier for a
+compiler to detect errors in the number of arguments or their
+types. The old style of declaration and definition still works in ANSI
+C, at least for a transition period, but we strongly recommend that
+you use the new form when you have a compiler that supports it.
 
-   /* power:  raise base to n-th power; n >= 0 */
-   /*         (old-style version) */
-   power(base, n)
-   int base, n;
-   {
-       int i, p;
+**Exercise 1.15**. Rewrite the temperature conversion program of
+Section 1.2 to use a function for conversion.
 
-       p = 1;
-       for (i = 1; i <= n; ++i)
-           p = p * base;
-       return p;
-   }
-The  parameters  are  named  between  the  parentheses,  and  their  types  are  declared  before
-opening the left brace; undeclared parameters are taken as int. (The body of the function is
-the same as before.)
-
-The declaration of power at the beginning of the program would have looked like this:
-
-    int power();
-No  parameter  list  was  permitted,  so  the  compiler  could  not  readily  check  that  power  was
-being called correctly. Indeed, since by default power would have been assumed to return an
-int, the entire declaration might well have been omitted.
-
-The new syntax of function prototypes makes it much easier for a compiler to detect errors in
-the number of arguments or their types. The old style of declaration and definition still works
-in ANSI C, at least for a transition period, but we strongly recommend that you use the new
-form when you have a compiler that supports it.
-
-Exercise 1.15. Rewrite the temperature conversion program of Section 1.2 to use a function
-for conversion.
-
-1.8 Arguments - Call by Value
+# 1.8 Arguments - Call by Value
 
 One  aspect  of  C  functions  may  be  unfamiliar  to  programmers  who  are  used  to  some  other
 languages,  particulary  Fortran.  In  C,  all  function  arguments  are  passed  "by  value."  This
@@ -1407,7 +1428,7 @@ passed  to  the  function  is  the  location  or  address  of  the  beginning  o
 copying of array elements. By subscripting this value, the function can access and alter any
 argument of the array. This is the topic of the next section.
 
-1.9 Character Arrays
+# 1.9 Character Arrays
 
 The  most  common  type  of  array  in  C  is  the  array  of  characters.  To  illustrate  the  use  of
 character arrays and functions to manipulate them, let's write a program that reads a set of text
@@ -1552,7 +1573,7 @@ and to delete entirely blank lines.
 Exercise  1-19.  Write  a  function  reverse(s)  that  reverses  the  character  string  s.  Use  it  to
 write a program that reverses its input a line at a time.
 
-1.10 External Variables and Scope
+# 1.10 External Variables and Scope
 
 The variables in main, such as line, longest, etc., are private or local to main. Because they
 are declared within main, no other function can have direct access to them. The same is true
