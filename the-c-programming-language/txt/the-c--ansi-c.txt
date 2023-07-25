@@ -1052,7 +1052,7 @@ getchar returned end of file. (More on this in Chapter 2.)
 
 20 
 
-Exercsise 1-6. Verify that the expression getchar() != EOF is 0 or 1.  
+Exercise 1-6. Verify that the expression getchar() != EOF is 0 or 1.  
 
 Exercise 1-7. Write a program to print the value of EOF.  
 

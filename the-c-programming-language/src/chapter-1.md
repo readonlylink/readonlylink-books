@@ -804,7 +804,7 @@ This has the undesired effect of setting `c` to 0 or 1, depending on
 whether or not the call of `getchar` returned end of file. (More on
 this in Chapter 2.)
 
-**Exercsise 1-6**. Verify that the expression `getchar() != EOF` is 0 or 1.
+**Exercise 1-6**. Verify that the expression `getchar() != EOF` is 0 or 1.
 
 **Exercise 1-7**. Write a program to print the value of `EOF`.
 
