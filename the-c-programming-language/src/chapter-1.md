@@ -381,142 +381,166 @@ Each `%` construction in the first argument of `printf` is paired with
 the corresponding second argument, third argument, etc.; they must
 match up properly by number and type, or you will get wrong answers.
 
-By  the  way,  printf  is  not  part  of  the  C  language;  there  is  no  input  or  output  defined  in  C
-itself. printf is just a useful function from the standard library of functions that are normally
-accessible to C programs. The behaviour of printf is defined in the ANSI standard, however,
-so  its  properties  should  be  the  same  with  any  compiler  and  library  that  conforms  to  the
-standard.
+By the way, `printf` is not part of the C language; there is no input
+or output defined in C itself. `printf` is just a useful function from
+the standard library of functions that are normally accessible to C
+programs. The behaviour of `printf` is defined in the ANSI standard,
+however, so its properties should be the same with any compiler and
+library that conforms to the standard.
 
-In order to concentrate on C itself, we don't talk much about input and output until chapter 7.
-In particular, we will defer formatted input until then. If you have to input numbers, read the
-discussion  of  the  function  scanf  in  Section  7.4.  scanf  is  like  printf,  except  that  it  reads
-input instead of writing output.
+In order to concentrate on C itself, we don't talk much about input
+and output until chapter 7.  In particular, we will defer formatted
+input until then. If you have to input numbers, read the discussion of
+the function `scanf` in Section 7.4.  `scanf` is like `printf`, except
+that it reads input instead of writing output.
 
-There are a couple of problems with the temperature conversion program. The simpler one is
-that the output isn't very pretty because the numbers are not right-justified. That's easy to fix;
-if  we  augment  each  %d  in  the  printf  statement  with  a  width,  the  numbers  printed  will  be
-right-justified in their fields. For instance, we might say
+There are a couple of problems with the temperature conversion
+program. The simpler one is that the output isn't very pretty because
+the numbers are not right-justified. That's easy to fix; if we augment
+each `%d` in the `printf` statement with a width, the numbers printed
+will be right-justified in their fields. For instance, we might say
 
-   printf("%3d %6d\n", fahr, celsius);
-to print the first number of each line in a field three digits wide, and the second in a field six
-digits wide, like this:
+```c
+printf("%3d %6d\n", fahr, celsius);
+```
 
-     0     -17
-    20      -6
-    40       4
-    60      15
-    80      26
-   100      37
-   ...
+to print the first number of each line in a field three digits wide,
+and the second in a field six digits wide, like this:
 
+```
+  0    -17
+ 20     -6
+ 40      4
+ 60     15
+ 80     26
+100     37
+120     48
+140     60
+160     71
+180     82
+200     93
+220    104
+240    115
+260    126
+280    137
+300    148
+```
 
+The more serious problem is that because we have used integer
+arithmetic, the Celsius temperatures are not very accurate; for
+instance, 0°F is actually about -17.8°C, not -17. To get more accurate
+answers, we should use floating-point arithmetic instead of integer.
+This requires some changes in the program. Here is the second version:
 
+```c
+#include <stdio.h>
 
+/* print Fahrenheit-Celsius table
+    for fahr = 0, 20, ..., 300; floating-point version */
+main()
+{
+    float fahr, celsius;
+    float lower, upper, step;
 
+    lower = 0;      /* lower limit of temperatuire scale */
+    upper = 300;    /* upper limit */
+    step = 20;      /* step size */
 
+    fahr = lower;
+    while (fahr <= upper) {
+        celsius = (5.0/9.0) * (fahr-32.0);
+        printf("%3.0f %6.1f\n", fahr, celsius);
+        fahr = fahr + step;
+    }
+}
+```
 
-The  more  serious  problem  is  that  because  we  have  used  integer  arithmetic,  the  Celsius
-temperatures are not very accurate; for instance, 0oF is actually about -17.8oC, not -17. To get
-more  accurate  answers,  we  should  use  floating-point  arithmetic  instead  of  integer.  This
-requires some changes in the program. Here is the second version:
+This is much the same as before, except that `fahr` and `celsius` are
+declared to be `float` and the formula for conversion is written in a
+more natural way. We were unable to use `5/9` in the previous version
+because integer division would truncate it to zero.  A decimal point
+in a constant indicates that it is floating point, however, so
+`5.0/9.0` is not truncated because it is the ratio of two
+floating-point values.
 
-15
+If an arithmetic operator has integer operands, an integer operation
+is performed.  If an arithmetic operator has one floating-point
+operand and one integer operand, however, the integer will be
+converted to floating point before the operation is done.  If we had
+written `(fahr-32)`, the `32` would be automatically converted to
+floating point. Nevertheless, writing floating-point constants with
+explicit decimal points even when they have integral values emphasizes
+their floating-point nature for human readers.
 
-   #include <stdio.h>
+The detailed rules for when integers are converted to floating point
+are in Chapter 2. For now, notice that the assignment
 
-   /* print Fahrenheit-Celsius table
-       for fahr = 0, 20, ..., 300; floating-point version */
-   main()
-   {
-     float fahr, celsius;
-     float lower, upper, step;
+```c
+fahr = lower;
+```
 
-     lower = 0;      /* lower limit of temperatuire scale */
-     upper = 300;    /* upper limit */
-     step = 20;      /* step size */
-
-     fahr = lower;
-     while (fahr <= upper) {
-         celsius = (5.0/9.0) * (fahr-32.0);
-         printf("%3.0f %6.1f\n", fahr, celsius);
-         fahr = fahr + step;
-     }
-   }
-This is much the same as before, except that fahr and celsius are declared to be float and
-the formula for conversion is written in a more natural way. We were unable to use 5/9 in the
-previous  version  because  integer  division  would  truncate  it  to  zero.  A  decimal  point  in  a
-constant indicates that it is floating point, however, so 5.0/9.0 is not truncated because it is
-the ratio of two floating-point values.
-
-If  an  arithmetic  operator  has  integer  operands,  an  integer  operation  is  performed.  If  an
-arithmetic  operator  has  one  floating-point  operand  and  one  integer  operand,  however,  the
-integer  will  be  converted  to  floating  point  before  the  operation  is  done.  If  we  had  written
-(fahr-32), the 32 would be automatically converted to floating point. Nevertheless, writing
-floating-point  constants  with  explicit  decimal  points  even  when  they  have  integral  values
-emphasizes their floating-point nature for human readers.
-
-The detailed rules for when integers are converted to floating point are in Chapter 2. For now,
-notice that the assignment
-
-   fahr = lower;
 and the test
 
-   while (fahr <= upper)
-also work in the natural way - the int is converted to float before the operation is done.
+```c
+while (fahr <= upper)
+```
 
-The printf conversion specification %3.0f says that a floating-point number (here fahr) is
-to  be  printed  at  least  three  characters  wide,  with  no  decimal  point  and  no  fraction  digits.
-%6.1f describes another number (celsius) that is to be printed at least six characters wide,
-with 1 digit after the decimal point. The output looks like this:
+also work in the natural way - the `int` is converted to `float`
+before the operation is done.
 
-     0   -17.8
-    20    -6.7
-    40     4.4
-   ...
+The `printf` conversion specification `%3.0f` says that a
+floating-point number (here `fahr`) is to be printed at least three
+characters wide, with no decimal point and no fraction digits.
+`%6.1f` describes another number (`celsius`) that is to be printed at
+least six characters wide, with 1 digit after the decimal point. The
+output looks like this:
+
+```
+  0  -17.8
+ 20   -6.7
+ 40    4.4
+ 60   15.6
+ 80   26.7
+100   37.8
+120   48.9
+140   60.0
+160   71.1
+180   82.2
+200   93.3
+220  104.4
+240  115.6
+260  126.7
+280  137.8
+300  148.9
+```
+
+Width and precision may be omitted from a specification: `%6f` says
+that the number is to be at least six characters wide; `%.2f`
+specifies two characters after the decimal point, but the width is not
+constrained; and `%f` merely says to print the number as floating
+point.
 
 
+| example | meaning                                                            |
+|---------|--------------------------------------------------------------------|
+| %d      | print as decimal integer                                           |
+| %6d     | print as decimal integer, at least 6 characters wide               |
+| %f      | print as floating point                                            |
+| %6f     | print as floating point, at least 6 characters wide                |
+| %.2f    | print as floating point, 2 characters after decimal point          |
+| %6.2f   | print as floating point, at least 6 wide and 2 after decimal point |
 
+Among others, `printf` also recognizes `%o` for octal, `%x` for
+hexadecimal, `%c` for character, `%s` for character string and `%%`
+for itself.
 
+**Exercise 1-3**. Modify the temperature conversion program to print a
+heading above the table.
 
+**Exercise 1-4**. Write a program to print the corresponding Celsius
+to Fahrenheit table.
 
-
-
-
-Width and precision may be omitted from a specification: %6f says that the number is to be at
-least six characters wide; %.2f specifies two characters after the decimal point, but the width
-is not constrained; and %f merely says to print the number as floating point.
-
-16
-
- %d
-
- %6d
-
- %f
-
- %6f
-
- print as decimal integer
-
- print as decimal integer, at least 6 characters wide
-
- print as floating point
-
- print as floating point, at least 6 characters wide
-
- print as floating point, 2 characters after decimal point
-
- %.2f
- %6.2f     print as floating point, at least 6 wide and 2 after decimal point
-
-Among others, printf also recognizes %o for octal, %x for hexadecimal, %c for character, %s
-for character string and %% for itself.
-
-Exercise 1-3. Modify the temperature conversion program to print a heading above the table.
-
-Exercise 1-4. Write a program to print the corresponding Celsius to Fahrenheit table.
-
-1.3 The for statement
+# 1.3 The for statement
 
 There are plenty of different ways to write a program for a particular task. Let's try a variation
 on the temperature converter.
