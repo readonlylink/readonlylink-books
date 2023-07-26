@@ -478,631 +478,734 @@ without using `&&` or `||`.
 
 # 2.7 Type Conversions
 
-When  an  operator  has  operands  of  different  types,  they  are  converted  to  a  common  type
-according to a small number of rules. In general, the only automatic conversions are those that
-convert  a  "narrower"  operand  into  a  "wider"  one  without  losing  information,  such  as
-converting an integer into floating point in an expression like f + i. Expressions that don't
-make  sense,  like  using  a  float  as  a  subscript,  are  disallowed.  Expressions  that  might  lose
-information,  like  assigning  a  longer  integer  type  to  a  shorter,  or  a  floating-point  type  to  an
+When an operator has operands of different types, they are converted
+to a common type according to a small number of rules. In general, the
+only automatic conversions are those that convert a "narrower" operand
+into a "wider" one without losing information, such as converting an
+integer into floating point in an expression like f + i. Expressions
+that don't make sense, like using a float as a subscript, are
+disallowed.  Expressions that might lose information, like assigning a
+longer integer type to a shorter, or a floating-point type to an
 integer, may draw a warning, but they are not illegal.
 
-A  char  is  just  a  small  integer,  so  chars  may  be  freely  used  in  arithmetic  expressions.  This
-permits  considerable  flexibility  in  certain  kinds  of  character  transformations.  One  is
-exemplified  by  this  naive  implementation  of  the  function  atoi,  which  converts  a  string  of
-digits into its numeric equivalent.
+A char is just a small integer, so chars may be freely used in
+arithmetic expressions.  This permits considerable flexibility in
+certain kinds of character transformations.  One is exemplified by
+this naive implementation of the function atoi, which converts a
+string of digits into its numeric equivalent.
 
-   /* atoi:  convert s to integer */
-   int atoi(char s[])
-   {
-       int i, n;
+```c
+/* atoi:  convert s to integer */
+int atoi(char s[])
+{
+    int i, n;
 
-       n = 0;
-       for (i = 0; s[i] >= '0' && s[i] <= '9'; ++i)
-           n = 10 * n + (s[i] - '0');
-       return n;
-   }
+    n = 0;
+    for (i = 0; s[i] >= '0' && s[i] <= '9'; ++i)
+        n = 10 * n + (s[i] - '0');
+    return n;
+}
+```
+
 As we discussed in Chapter 1, the expression
 
+```c
+s[i] - '0'
+```
 
+gives the numeric value of the character stored in s[i], because the
+values of '0', '1', etc., form a contiguous increasing sequence.
 
+Another example of char to int conversion is the function lower, which
+maps a single character to lower case for the ASCII character set. If
+the character is not an upper case letter, lower returns it unchanged.
 
+```c
+/* lower:  convert c to lower case; ASCII only */
+int lower(int c)
+{
+    if (c >= 'A' && c <= 'Z')
+        return c + 'a' - 'A';
+    else
+        return c;
+}
+```
 
+This works for ASCII because corresponding upper case and lower case
+letters are a fixed distance apart as numeric values and each alphabet
+is contiguous -- there is nothing but letters between A and Z. This
+latter observation is not true of the EBCDIC character set, however,
+so this code would convert more than just letters in EBCDIC.
 
+The standard header <ctype.h>, described in Appendix B, defines a
+family of functions that provide tests and conversions that are
+independent of character set. For example, the function tolower is a
+portable replacement for the function lower shown above. Similarly,
+the test
 
+```c
+c >= '0' && c <= '9'
+```
 
-
-
-    s[i] - '0'
-gives the numeric value of the character stored in s[i], because the values of '0', '1', etc.,
-form a contiguous increasing sequence.
-
-Another  example  of  char  to  int  conversion  is  the  function  lower,  which  maps  a  single
-character to lower case for the ASCII character set. If the character is not an upper case letter,
-lower returns it unchanged.
-
-42
-
-   /* lower:  convert c to lower case; ASCII only */
-   int lower(int c)
-   {
-       if (c >= 'A' && c <= 'Z')
-           return c + 'a' - 'A';
-       else
-           return c;
-   }
-This  works  for  ASCII  because  corresponding  upper  case  and  lower  case  letters  are  a  fixed
-distance apart as numeric values and each alphabet is contiguous -- there is nothing but letters
-between A and Z. This latter observation is not true of the EBCDIC character set, however, so
-this code would convert more than just letters in EBCDIC.
-
-The standard header <ctype.h>, described in Appendix B, defines a family of functions that
-provide tests and conversions that are independent of character set. For example, the function
-tolower is a portable replacement for the function lower shown above. Similarly, the test
-
-   c >= '0' && c <= '9'
 can be replaced by
 
-   isdigit(c)
+```c
+isdigit(c)
+```
+
 We will use the <ctype.h> functions from now on.
 
-There  is  one  subtle  point  about  the  conversion of characters to integers. The language does
-not specify whether variables of type char are signed or unsigned quantities. When a char is
-converted to an int, can it ever produce a negative integer? The answer varies from machine
-to machine, reflecting differences in architecture. On some machines a char whose leftmost
-bit  is  1  will  be  converted  to  a  negative  integer  ("sign  extension").  On  others,  a  char  is
-promoted to an int by adding zeros at the left end, and thus is always positive.
+There is one subtle point about the conversion of characters to
+integers. The language does not specify whether variables of type char
+are signed or unsigned quantities. When a char is converted to an int,
+can it ever produce a negative integer? The answer varies from machine
+to machine, reflecting differences in architecture. On some machines a
+char whose leftmost bit is 1 will be converted to a negative integer
+("sign extension").  On others, a char is promoted to an int by adding
+zeros at the left end, and thus is always positive.
 
-The definition of C guarantees that any character in the machine's standard printing character
-set  will  never  be  negative,  so  these  characters  will  always  be  positive  quantities  in
-expressions. But arbitrary bit patterns stored in character variables may appear to be negative
-on some machines, yet positive on others. For portability, specify signed or unsigned if non-
-character data is to be stored in char variables.
+The definition of C guarantees that any character in the machine's
+standard printing character set will never be negative, so these
+characters will always be positive quantities in expressions. But
+arbitrary bit patterns stored in character variables may appear to be
+negative on some machines, yet positive on others. For portability,
+specify signed or unsigned if non- character data is to be stored in
+char variables.
 
-Relational expressions like i > j and logical expressions connected by && and || are defined
-to have value 1 if true, and 0 if false. Thus the assignment
+Relational expressions like i > j and logical expressions connected by
+&& and || are defined to have value 1 if true, and 0 if false. Thus
+the assignment
 
-   d = c >= '0' && c <= '9'
-sets d to 1 if c is a digit, and 0 if not. However, functions like isdigit may return any non-
-zero value for true. In the test part of if, while, for, etc., "true" just means "non-zero", so
-this makes no difference.
+```c
+d = c >= '0' && c <= '9'
+```
 
+sets d to 1 if c is a digit, and 0 if not. However, functions like
+isdigit may return any non- zero value for true. In the test part of
+if, while, for, etc., "true" just means "non-zero", so this makes no
+difference.
 
+Implicit arithmetic conversions work much as expected. In general, if
+an operator like + or * that takes two operands (a binary operator)
+has operands of different types, the "lower" type is promoted to the
+"higher" type before the operation proceeds.  The result is of the
+integer type. Section 6 of Appendix A states the conversion rules
+precisely. If there are no unsigned operands, however, the following
+informal set of rules will suffice:
 
+-  If either operand is long double, convert the other to long double.
+-  Otherwise, if either operand is double, convert the other to double.
+-  Otherwise, if either operand is float, convert the other to float.
+-  Otherwise, convert char and short to int.
+-  Then, if either operand is long, convert the other to long.
 
+Notice that floats in an expression are not automatically converted to
+double; this is a change from the original definition. In general,
+mathematical functions like those in <math.h> will use double
+precision. The main reason for using float is to save storage in large
+arrays, or, less often, to save time on machines where
+double-precision arithmetic is particularly expensive.
 
+Conversion rules are more complicated when unsigned operands are
+involved. The problem is that comparisons between signed and unsigned
+values are machine-dependent, because they depend on the sizes of the
+various integer types. For example, suppose that int is 16 bits and
+long is 32 bits.  Then -1L < 1U, because 1U, which is an unsigned int,
+is promoted to a signed long. But -1L > 1UL because -1L is promoted to
+unsigned long and thus appears to be a large positive number.
 
+Conversions take place across assignments; the value of the right side
+is converted to the type of the left, which is the type of the result.
 
-Implicit arithmetic conversions work much as expected. In general, if an operator like + or *
-that takes two operands (a binary operator) has operands of different types, the "lower" type
-is  promoted  to  the  "higher"  type  before  the  operation  proceeds.  The  result  is  of  the  integer
-type. Section 6 of Appendix A states the conversion rules precisely. If there are no unsigned
-operands, however, the following informal set of rules will suffice:
+A character is converted to an integer, either by sign extension or
+not, as described above.
 
-43
+Longer integers are converted to shorter ones or to chars by dropping
+the excess high-order bits. Thus in
 
-If either operand is long double, convert the other to long double.
-•
-•  Otherwise, if either operand is double, convert the other to double.
-•  Otherwise, if either operand is float, convert the other to float.
-•  Otherwise, convert char and short to int.
-•  Then, if either operand is long, convert the other to long.
+```c
+int  i;
+char c;
 
-Notice  that  floats  in  an  expression  are  not  automatically  converted  to  double;  this  is  a
-change from the original definition. In general, mathematical functions like those in <math.h>
-will use double precision. The main reason for using float is to save storage in large arrays,
-or,  less  often,  to  save  time  on  machines  where  double-precision  arithmetic  is  particularly
-expensive.
+i = c;
+c = i;
+```
 
-Conversion rules are more complicated when unsigned operands are involved. The problem
-is that comparisons between signed and unsigned values are machine-dependent, because they
-depend on the sizes of the various integer types. For example, suppose that int is 16 bits and
-long  is  32  bits.  Then  -1L  <  1U,  because  1U,  which  is  an  unsigned  int,  is  promoted  to  a
-signed long. But -1L > 1UL because -1L is promoted to unsigned long and thus appears
-to be a large positive number.
+the value of c is unchanged. This is true whether or not sign
+extension is involved. Reversing the order of assignments might lose
+information, however.
 
-Conversions take place across assignments; the value of the right side is converted to the type
-of the left, which is the type of the result.
+If x is float and i is int, then x = i and i = x both cause
+conversions; float to int causes truncation of any fractional
+part. When a double is converted to float, whether the value is
+rounded or truncated is implementation dependent.
 
-A character is converted to an integer, either by sign extension or not, as described above.
+Since an argument of a function call is an expression, type conversion
+also takes place when arguments are passed to functions.  In the
+absence of a function prototype, char and short become int, and float
+becomes double. This is why we have declared function arguments to be
+int and double even when the function is called with char and float.
 
-Longer integers are converted to shorter ones or to chars by dropping the excess high-order
-bits. Thus in
+Finally, explicit type conversions can be forced ("coerced") in any
+expression, with a unary operator called a cast. In the construction
 
-   int  i;
-   char c;
+```
+(type name) expression
+```
 
-   i = c;
-   c = i;
-the value of c is unchanged. This is true whether or not sign extension is involved. Reversing
-the order of assignments might lose information, however.
+the expression is converted to the named type by the conversion rules
+above.  The precise meaning of a cast is as if the expression were
+assigned to a variable of the specified type, which is then used in
+place of the whole construction. For example, the library routine sqrt
+expects a double argument, and will produce nonsense if inadvertently
+handled something else. (sqrt is declared in <math.h>.) So if n is an
+integer, we can use
 
-If  x  is  float  and  i  is  int,  then  x  =  i  and  i  =  x  both  cause  conversions;  float  to  int
-causes truncation of any fractional part. When a  double is converted to  float, whether the
-value is rounded or truncated is implementation dependent.
+```c
+sqrt((double) n)
+```
 
-Since an argument of a function call is an expression, type conversion also takes place when
-arguments  are  passed  to  functions.  In  the  absence  of  a  function  prototype,  char  and  short
-become int, and float becomes double. This is why we have declared function arguments to
-be int and double even when the function is called with char and float.
+to convert the value of n to double before passing it to sqrt. Note
+that the cast produces the value of n in the proper type; n itself is
+not altered.  The cast operator has the same high precedence as other
+unary operators, as summarized in the table at the end of this
+chapter.
 
-Finally, explicit type conversions can be forced ("coerced") in any expression, with a unary
-operator called a cast. In the construction
+If arguments are declared by a function prototype, as the normally
+should be, the declaration causes automatic coercion of any arguments
+when the function is called.  Thus, given a function prototype for
+sqrt:
 
+```c
+double sqrt(double)
+```
 
-
-
-
-  (type name) expression
-
-the  expression  is  converted  to  the  named  type  by  the  conversion  rules  above.  The  precise
-meaning  of  a  cast  is  as  if  the  expression  were  assigned  to  a  variable  of  the  specified  type,
-which is then used in place of the whole construction. For example, the library routine sqrt
-expects  a  double  argument,  and  will  produce  nonsense  if  inadvertently  handled  something
-else. (sqrt is declared in <math.h>.) So if n is an integer, we can use
-
-44
-
-   sqrt((double) n)
-to convert the value of n to double before passing it to sqrt. Note that the cast produces the
-value  of  n  in  the  proper  type;  n  itself  is  not  altered.  The  cast  operator  has  the  same  high
-precedence as other unary operators, as summarized in the table at the end of this chapter.
-
-If arguments are declared by a function prototype, as the normally should be, the declaration
-causes  automatic  coercion  of  any  arguments  when  the  function  is  called.  Thus,  given  a
-function prototype for sqrt:
-
-   double sqrt(double)
 the call
 
-   root2 = sqrt(2)
-coerces the integer 2 into the double value 2.0 without any need for a cast.
+```c
+root2 = sqrt(2)
+```
 
-The  standard  library  includes  a  portable  implementation  of  a  pseudo-random  number
-generator and a function for initializing the seed; the former illustrates a cast:
+coerces the integer 2 into the double value 2.0 without any need for a
+cast.
 
-   unsigned long int next = 1;
+The standard library includes a portable implementation of a
+pseudo-random number generator and a function for initializing the
+seed; the former illustrates a cast:
 
-   /* rand:  return pseudo-random integer on 0..32767 */
-   int rand(void)
-   {
-       next = next * 1103515245 + 12345;
-       return (unsigned int)(next/65536) % 32768;
-   }
+```c
+unsigned long int next = 1;
 
-   /* srand:  set seed for rand() */
-   void srand(unsigned int seed)
-   {
-       next = seed;
-   }
-Exercise  2-3.  Write  a  function  htoi(s),  which  converts  a  string  of  hexadecimal  digits
-(including an optional 0x or  0X) into its equivalent integer value. The allowable digits are 0
-through 9, a through f, and A through F.
+/* rand:  return pseudo-random integer on 0..32767 */
+int rand(void)
+{
+    next = next * 1103515245 + 12345;
+    return (unsigned int)(next/65536) % 32768;
+}
+
+/* srand:  set seed for rand() */
+void srand(unsigned int seed)
+{
+    next = seed;
+}
+```
+
+**Exercise 2-3**.  Write a function htoi(s), which converts a string
+of hexadecimal digits (including an optional 0x or 0X) into its
+equivalent integer value. The allowable digits are 0 through 9, a
+through f, and A through F.
 
 # 2.8 Increment and Decrement Operators
 
-C  provides  two  unusual  operators  for  incrementing  and  decrementing  variables.  The
-increment operator ++ adds 1 to its operand, while the decrement operator -- subtracts 1. We
-have frequently used ++ to increment variables, as in
+C provides two unusual operators for incrementing and decrementing
+variables.  The increment operator ++ adds 1 to its operand, while the
+decrement operator -- subtracts 1. We have frequently used ++ to
+increment variables, as in
 
-   if (c == '\n')
-       ++nl;
+```c
+if (c == '\n')
+    ++nl;
+```
 
+The unusual aspect is that ++ and -- may be used either as prefix
+operators (before the variable, as in ++n), or postfix operators
+(after the variable: n++). In both cases, the effect is to increment
+n.  But the expression ++n increments n before its value is used,
+while n++ increments n after its value has been used.  This means that
+in a context where the value is being used, not just the effect, ++n
+and n++ are different. If n is 5, then
 
+```c
+x = n++;
+```
 
-
-
-
-
-
-
-
-The  unusual  aspect  is  that  ++  and  --  may  be  used  either  as  prefix  operators  (before  the
-variable, as in ++n), or postfix operators (after the variable: n++). In both cases, the effect is to
-increment  n.  But  the  expression  ++n  increments  n  before  its  value  is  used,  while  n++
-increments  n  after  its  value  has  been  used.  This  means  that  in  a  context  where  the  value  is
-being used, not just the effect, ++n and n++ are different. If n is 5, then
-
-45
-
-   x = n++;
 sets x to 5, but
 
-   x = ++n;
-sets x to 6. In both cases, n becomes 6. The increment and decrement operators can only be
-applied to variables; an expression like (i+j)++ is illegal.
+```c
+x = ++n;
+```
 
-In a context where no value is wanted, just the incrementing effect, as in
+sets x to 6. In both cases, n becomes 6. The increment and decrement
+operators can only be applied to variables; an expression like (i+j)++
+is illegal.
 
-   if (c == '\n')
-       nl++;
-prefix and postfix are the same. But there are situations where one or the other is specifically
-called for. For instance, consider the function squeeze(s,c), which removes all occurrences
-of the character c from the string s.
+In a context where no value is wanted, just the incrementing effect,
+as in
 
-   /* squeeze:  delete all c from s */
-   void squeeze(char s[], int c)
-   {
-      int i, j;
+```c
+if (c == '\n')
+    nl++;
+```
 
-      for (i = j = 0; s[i] != '\0'; i++)
-          if (s[i] != c)
-              s[j++] = s[i];
-      s[j] = '\0';
-   }
-Each  time  a  non-c  occurs,  it  is  copied  into  the  current  j  position,  and  only  then  is  j
-incremented to be ready for the next character. This is exactly equivalent to
+prefix and postfix are the same. But there are situations where one or
+the other is specifically called for. For instance, consider the
+function squeeze(s,c), which removes all occurrences of the character
+c from the string s.
 
-   if (s[i] != c) {
-       s[j] = s[i];
-       j++;
-   }
-Another example of a similar construction comes from the getline function that we wrote in
-Chapter 1, where we can replace
+```c
+/* squeeze:  delete all c from s */
+void squeeze(char s[], int c)
+{
+   int i, j;
 
-   if (c == '\n') {
-       s[i] = c;
-       ++i;
-   }
+   for (i = j = 0; s[i] != '\0'; i++)
+       if (s[i] != c)
+           s[j++] = s[i];
+   s[j] = '\0';
+}
+```
+
+Each time a non-c occurs, it is copied into the current j position,
+and only then is j incremented to be ready for the next
+character. This is exactly equivalent to
+
+```c
+if (s[i] != c) {
+    s[j] = s[i];
+    j++;
+}
+```
+
+Another example of a similar construction comes from the getline
+function that we wrote in Chapter 1, where we can replace
+
+```c
+if (c == '\n') {
+    s[i] = c;
+    ++i;
+}
+
 by the more compact
 
-   if (c == '\n')
-      s[i++] = c;
-As  a  third  example,  consider  the  standard  function  strcat(s,t),  which  concatenates  the
-string  t  to  the  end  of  string  s.  strcat  assumes  that  there  is  enough  space  in  s  to  hold  the
-combination.  As  we  have  written  it,  strcat  returns  no  value;  the  standard  library  version
+```c
+if (c == '\n')
+   s[i++] = c;
+```
+
+As a third example, consider the standard function strcat(s,t), which
+concatenates the string t to the end of string s.  strcat assumes that
+there is enough space in s to hold the combination.  As we have
+written it, strcat returns no value; the standard library version
 returns a pointer to the resulting string.
 
-   /* strcat:  concatenate t to end of s; s must be big enough */
-   void strcat(char s[], char t[])
-   {
+```c
+/* strcat:  concatenate t to end of s; s must be big enough */
+void strcat(char s[], char t[])
+{
 
-       int i, j;
+    int i, j;
 
-       i = j = 0;
-       while (s[i] != '\0') /* find end of s */
-           i++;
-       while ((s[i++] = t[j++]) != '\0') /* copy t */
-           ;
-   }
-As each member is copied from t to s, the postfix ++ is applied to both i and j to make sure
-that they are in position for the next pass through the loop.
+    i = j = 0;
+    while (s[i] != '\0') /* find end of s */
+        i++;
+    while ((s[i++] = t[j++]) != '\0') /* copy t */
+        ;
+}
+```
 
-Exercise 2-4. Write an alternative version of squeeze(s1,s2) that deletes each character in
-s1 that matches any character in the string s2.
+As each member is copied from t to s, the postfix ++ is applied to
+both i and j to make sure that they are in position for the next pass
+through the loop.
 
-Exercise 2-5. Write the function  any(s1,s2), which returns the first location in a string  s1
-where  any  character  from  the  string  s2  occurs,  or  -1  if  s1  contains  no  characters  from  s2.
-(The  standard  library  function  strpbrk  does  the  same  job  but  returns  a  pointer  to  the
-location.)
+**Exercise 2-4**. Write an alternative version of squeeze(s1,s2) that
+deletes each character in s1 that matches any character in the string
+s2.
+
+**Exercise 2-5**. Write the function any(s1,s2), which returns the
+first location in a string s1 where any character from the string s2
+occurs, or -1 if s1 contains no characters from s2.  (The standard
+library function strpbrk does the same job but returns a pointer to
+the location.)
 
 # 2.9 Bitwise Operators
 
 C provides six operators for bit manipulation; these may only be applied to integral operands,
 that is, char, short, int, and long, whether signed or unsigned.
-&
-|
-^
 
-bitwise inclusive OR
+| operator | meaning                  |
+|----------|--------------------------|
+| `&`      | bitwise inclusive OR     |
+| `\|`     | bitwise exclusive OR     |
+| `^`      | bitwise AND              |
+| `<<`     | left shift               |
+| `>>`     | right shift              |
+| `~`      | one's complement (unary) |
 
-bitwise exclusive OR
+The bitwise AND operator & is often used to mask off some set of bits,
+for example
 
-bitwise AND
+```c
+n = n & 0177;
+```
 
-<<    left shift
->>  right shift
-~
-
-one's complement (unary)
-
-The bitwise AND operator & is often used to mask off some set of bits, for example
-
-   n = n & 0177;
 sets to zero all but the low-order 7 bits of n.
 
 The bitwise OR operator | is used to turn bits on:
 
-   x = x | SET_ON;
+```c
+x = x | SET_ON;
+```
+
 sets to one in x the bits that are set to one in SET_ON.
 
-The bitwise exclusive OR operator ^ sets a one in each bit position where its operands have
-different bits, and zero where they are the same.
+The bitwise exclusive OR operator ^ sets a one in each bit position
+where its operands have different bits, and zero where they are the
+same.
 
-One  must  distinguish  the  bitwise  operators  &  and  |  from  the  logical  operators  &&  and  ||,
-which imply left-to-right evaluation of a truth value. For example, if x is 1 and y is 2, then x
-& y is zero while x && y is one.
+One must distinguish the bitwise operators & and | from the logical
+operators && and ||, which imply left-to-right evaluation of a truth
+value. For example, if x is 1 and y is 2, then x & y is zero while x
+&& y is one.
 
-The shift operators << and >> perform left and right shifts of their left operand by the number
-of bit positions given by the right operand, which must be non-negative. Thus x << 2 shifts
+The shift operators << and >> perform left and right shifts of their
+left operand by the number of bit positions given by the right
+operand, which must be non-negative. Thus x << 2 shifts the value of x
+by two positions, filling vacated bits with zero; this is equivalent
+to multiplication by 4.  Right shifting an unsigned quantity always
+fits the vacated bits with zero.  Right shifting a signed quantity
+will fill with bit signs ("arithmetic shift") on some machines and
+with 0-bits ("logical shift") on others.
 
+The unary operator ~ yields the one's complement of an integer; that
+is, it converts each 1-bit into a 0-bit and vice versa. For example
 
+```c
+x = x & ~077
+```
 
+sets the last six bits of x to zero. Note that x & ~077 is independent
+of word length, and is thus preferable to, for example, x & 0177700,
+which assumes that x is a 16-bit quantity. The portable form involves
+no extra cost, since ~077 is a constant expression that can be
+evaluated at compile time.
 
+As an illustration of some of the bit operators, consider the function
+getbits(x,p,n) that returns the (right adjusted) n-bit field of x that
+begins at position p.  We assume that bit position 0 is at the right
+end and that n and p are sensible positive values.  For example,
+getbits(x,4,3) returns the three bits in positions 4, 3 and 2,
+right-adjusted.
 
+```c
+/* getbits:  get n bits from position p */
+unsigned getbits(unsigned x, int p, int n)
+{
+    return (x >> (p+1-n)) & ~(~0 << n);
+}
+```
 
-the  value  of  x  by  two  positions,  filling  vacated  bits  with  zero;  this  is  equivalent  to
-multiplication  by  4.  Right  shifting  an  unsigned  quantity  always  fits  the  vacated  bits  with
-zero.  Right  shifting  a  signed  quantity  will  fill  with  bit  signs  ("arithmetic  shift")  on  some
-machines and with 0-bits ("logical shift") on others.
+The expression x >> (p+1-n) moves the desired field to the right end
+of the word. ~0 is all 1-bits; shifting it left n positions with ~0<<n
+places zeros in the rightmost n bits; complementing that with ~ makes
+a mask with ones in the rightmost n bits.
 
-The unary operator ~ yields the one's complement of an integer; that is, it converts each 1-bit
-into a 0-bit and vice versa. For example
+**Exercise 2-6**. Write a function setbits(x,p,n,y) that returns x with
+the n bits that begin at position p set to the rightmost n bits of y,
+leaving the other bits unchanged.
 
+**Exercise 2-7**.  Write a function invert(x,p,n) that returns x with the
+n bits that begin at position p inverted (i.e., 1 changed into 0 and
+vice versa), leaving the others unchanged.
 
-   x = x & ~077
-sets the last six bits of  x to zero. Note that  x  &  ~077 is independent of word length, and is
-thus preferable to, for example, x & 0177700, which assumes that x is a 16-bit quantity. The
-portable form involves no extra cost, since ~077 is a constant expression that can be evaluated
-at compile time.
-
-As  an  illustration  of  some  of  the  bit  operators,  consider  the  function  getbits(x,p,n)  that
-returns  the  (right  adjusted)  n-bit  field  of  x  that  begins  at  position  p.  We  assume  that  bit
-position  0  is  at  the  right  end  and  that  n  and  p  are  sensible  positive  values.  For  example,
-getbits(x,4,3) returns the three bits in positions 4, 3 and 2, right-adjusted.
-
-   /* getbits:  get n bits from position p */
-   unsigned getbits(unsigned x, int p, int n)
-   {
-       return (x >> (p+1-n)) & ~(~0 << n);
-   }
-The expression x >> (p+1-n) moves the desired field to the right end of the word. ~0 is all
-1-bits;  shifting  it  left  n  positions  with  ~0<<n  places  zeros  in  the  rightmost  n  bits;
-complementing that with ~ makes a mask with ones in the rightmost n bits.
-
-Exercise 2-6. Write a function setbits(x,p,n,y) that returns x with the n bits that begin at
-position p set to the rightmost n bits of y, leaving the other bits unchanged.
-
-Exercise  2-7.  Write  a  function  invert(x,p,n)  that  returns  x  with  the  n  bits  that  begin  at
-position p inverted (i.e., 1 changed into 0 and vice versa), leaving the others unchanged.
-
-Exercise 2-8. Write a function rightrot(x,n) that returns the value of the integer x rotated
-to the right by n positions.
+**Exercise 2-8**. Write a function rightrot(x,n) that returns the value of
+the integer x rotated to the right by n positions.
 
 # 2.10 Assignment Operators and Expressions
 
 An expression such as
 
-   i = i + 2
-in which the variable on the left side is repeated immediately on the right, can be written in
-the compressed form
+```c
+i = i + 2
+```
 
-   i += 2
+in which the variable on the left side is repeated immediately on the
+right, can be written in the compressed form
+
+```c
+i += 2
+```
+
 The operator += is called an assignment operator.
 
-Most  binary  operators  (operators  like  +  that  have  a  left  and  right  operand)  have  a
-corresponding assignment operator op=, where op is one of
+Most binary operators (operators like + that have a left and right
+operand) have a corresponding assignment operator op=, where op is one
+of
 
+```
++   -   *   /   %   <<   >>   &   ^   |
+```
 
-   +   -   *   /   %   <<   >>   &   ^   |
 If expr1 and expr2 are expressions, then
 
-   expr1 op= expr2
+```
+expr1 op= expr2
+```
+
 is equivalent to
 
-   expr1 = (expr1) op (expr2)
-except that expr1 is computed only once. Notice the parentheses around expr2:
+```
+expr1 = (expr1) op (expr2)
+```
 
-   x *= y + 1
+except that expr1 is computed only once.
+Notice the parentheses around expr2:
+
+```c
+x *= y + 1
+```
+
 means
 
-   x = x * (y + 1)
+```c
+x = x * (y + 1)
+```
+
 rather than
 
-   x = x * y + 1
-As an example, the function bitcount counts the number of 1-bits in its integer argument.
+```c
+x = x * y + 1
+```
 
-   /* bitcount:  count 1 bits in x */
-   int bitcount(unsigned x)
-   {
-       int b;
+As an example, the function bitcount counts the number of 1-bits in
+its integer argument.
 
-       for (b = 0; x != 0; x >>= 1)
-           if (x & 01)
-               b++;
-       return b;
-   }
-Declaring the argument x to be an unsigned ensures that when it is right-shifted, vacated bits
-will be filled with zeros, not sign bits, regardless of the machine the program is run on.
+```c
+/* bitcount:  count 1 bits in x */
+int bitcount(unsigned x)
+{
+    int b;
 
-Quite apart from conciseness, assignment operators have the advantage that they correspond
-better to the way people think. We say "add 2 to i" or "increment i by 2", not "take i, add
-2,  then  put  the  result  back  in  i".  Thus  the  expression  i  +=  2  is  preferable  to  i  =  i+2.  In
+    for (b = 0; x != 0; x >>= 1)
+        if (x & 01)
+            b++;
+    return b;
+}
+```
+
+Declaring the argument x to be an unsigned ensures that when it is
+right-shifted, vacated bits will be filled with zeros, not sign bits,
+regardless of the machine the program is run on.
+
+Quite apart from conciseness, assignment operators have the advantage
+that they correspond better to the way people think. We say "add 2 to
+i" or "increment i by 2", not "take i, add 2, then put the result back
+in i".  Thus the expression i += 2 is preferable to i = i+2.  In
 addition, for a complicated expression like
 
-   yyval[yypv[p3+p4] + yypv[p1]] += 2
-the assignment operator makes the code easier to understand, since the reader doesn't have to
-check painstakingly that two long expressions are indeed the same, or to wonder why they're
-not. And an assignment operator may even help a compiler to produce efficient code.
+```c
+yyval[yypv[p3+p4] + yypv[p1]] += 2
+```
 
-We have already seen that the assignment statement has a value and can occur in expressions;
-the most common example is
+the assignment operator makes the code easier to understand, since the
+reader doesn't have to check painstakingly that two long expressions
+are indeed the same, or to wonder why they're not. And an assignment
+operator may even help a compiler to produce efficient code.
 
-   while ((c = getchar()) != EOF)
-       ...
-The other assignment operators (+=,  -=, etc.) can also occur in expressions, although this is
-less frequent.
+We have already seen that the assignment statement has a value and can
+occur in expressions; the most common example is
 
-In all such expressions, the type of an assignment expression is the type of its left operand,
-and the value is the value after the assignment.
+```c
+while ((c = getchar()) != EOF)
+    ...
+```
 
-Exercise 2-9. In a two's complement number system, x &= (x-1) deletes the rightmost 1-bit
-in x. Explain why. Use this observation to write a faster version of bitcount.
+The other assignment operators (+=, -=, etc.) can also occur in
+expressions, although this is less frequent.
 
+In all such expressions, the type of an assignment expression is the
+type of its left operand, and the value is the value after the
+assignment.
 
-
-
-
-
-
-
-
-
-
-
-
-
+**Exercise 2-9**. In a two's complement number system, x &= (x-1) deletes
+the rightmost 1-bit in x. Explain why. Use this observation to write a
+faster version of bitcount.
 
 # 2.11 Conditional Expressions
 
 The statements
 
-   if (a > b)
-       z = a;
-   else
-       z = b;
-compute in z the maximum of a and b. The conditional expression, written with the ternary
-operator  "?:",  provides  an  alternate  way  to  write  this  and  similar  constructions.  In  the
+```c
+if (a > b)
+    z = a;
+else
+    z = b;
+```
+
+compute in z the maximum of a and b. The conditional expression,
+written with the ternary operator "?:", provides an alternate way to
+write this and similar constructions.  In the expression
+
+```c
+expr1 ? expr2 : expr3
+```
+
+the expression expr1 is evaluated first.  If it is non-zero (true),
+then the expression expr2 is evaluated, and that is the value of the
+conditional expression.  Otherwise expr3 is evaluated, and that is the
+value. Only one of expr2 and expr3 is evaluated. Thus to set z to the
+maximum of a and b,
+
+```c
+z = (a > b) ? a : b;    /* z = max(a, b) */
+```
+
+It should be noted that the conditional expression is indeed an
+expression, and it can be used wherever any other expression can
+be. If expr2 and expr3 are of different types, the type of the result
+is determined by the conversion rules discussed earlier in this
+chapter. For example, if f is a float and n an int, then the
 expression
 
-   expr1 ? expr2 : expr3
-the  expression  expr1  is  evaluated  first.  If  it  is  non-zero  (true),  then  the  expression  expr2  is
-evaluated,  and  that  is  the  value  of  the  conditional  expression.  Otherwise expr3 is evaluated,
-and that is the value. Only one of expr2 and expr3 is evaluated. Thus to set z to the maximum
-of a and b,
+```c
+(n > 0) ? f : n
+```
 
-   z = (a > b) ? a : b;    /* z = max(a, b) */
-It should be noted that the conditional expression is indeed an expression, and it can be used
-wherever any other expression can be. If expr2 and expr3 are of different types, the type of the
-result is determined by the conversion rules discussed earlier in this chapter. For example, if f
-is a float and n an int, then the expression
-
-   (n > 0) ? f : n
 is of type float regardless of whether n is positive.
 
-Parentheses  are  not  necessary  around  the  first  expression  of  a  conditional  expression,  since
-the  precedence  of  ?:  is  very  low,  just  above  assignment.  They  are  advisable  anyway,
-however, since they make the condition part of the expression easier to see.
+Parentheses are not necessary around the first expression of a
+conditional expression, since the precedence of ?: is very low, just
+above assignment.  They are advisable anyway, however, since they make
+the condition part of the expression easier to see.
 
-The  conditional  expression  often  leads  to  succinct  code.  For  example,  this  loop  prints  n
-elements of an array, 10 per line, with each column separated by one blank, and with each line
-(including the last) terminated by a newline.
+The conditional expression often leads to succinct code.  For example,
+this loop prints n elements of an array, 10 per line, with each column
+separated by one blank, and with each line (including the last)
+terminated by a newline.
 
-   for (i = 0; i < n; i++)
-       printf("%6d%c", a[i], (i%10==9 || i==n-1) ? '\n' : ' ');
-A  newline  is  printed  after  every  tenth  element,  and  after  the  n-th.  All  other  elements  are
-followed by one blank. This might look tricky, but it's more compact than the equivalent if-
-else. Another good example is
+```c
+for (i = 0; i < n; i++)
+    printf("%6d%c", a[i], (i%10==9 || i==n-1) ? '\n' : ' ');
+```
 
-   printf("You have %d items%s.\n", n, n==1 ? "" : "s");
-Exercise 2-10. Rewrite the function lower, which converts upper case letters to lower case,
-with a conditional expression instead of if-else.
+A newline is printed after every tenth element, and after the n-th.
+All other elements are followed by one blank. This might look tricky,
+but it's more compact than the equivalent if- else. Another good
+example is
+
+```c
+printf("You have %d items%s.\n", n, n==1 ? "" : "s");
+```
+
+**Exercise 2-10**. Rewrite the function lower, which converts upper
+case letters to lower case, with a conditional expression instead of
+if-else.
 
 # 2.12 Precedence and Order of Evaluation
 
-Table  2.1  summarizes  the  rules  for  precedence  and  associativity  of  all  operators,  including
-those that we have not yet discussed. Operators on the same line have the same precedence;
-rows  are  in  order  of  decreasing  precedence,  so,  for  example,  *,  /,  and  %  all  have  the  same
-precedence, which is higher than that of binary + and -. The "operator" () refers to function
-call. The operators -> and . are used to access members of structures; they will be covered in
+Table 2.1 summarizes the rules for precedence and associativity of all
+operators, including those that we have not yet discussed. Operators
+on the same line have the same precedence; rows are in order of
+decreasing precedence, so, for example, *, /, and % all have the same
+precedence, which is higher than that of binary + and -. The
+"operator" () refers to function call. The operators -> and . are used
+to access members of structures; they will be covered in Chapter 6,
+along with sizeof (size of an object). Chapter 5 discusses *
+(indirection through a pointer) and & (address of an object), and
+Chapter 3 discusses the comma operator.
 
+**Table 2.1: Precedence and Associativity of Operators**
 
+| Operators                            | Associativity    |
+|--------------------------------------|------------------|
+| `() [] -> .`                         | left to right    |
+| `! ~ ++ -- + - * (type) sizeof`      | right to left    |
+| `* / %`                              | left to right    |
+| `+ -`                                | left to right    |
+| `<<  >>`                             | left to right    |
+| `< <= > >=`                          | left to right    |
+| `== !=`                              | left to right    |
+| `&`                                  | left to right    |
+| `^`                                  | left to right    |
+| `\|`                                 | left to right    |
+| `&&`                                 | left to right    |
+| `\|\|`                               | left to right    |
+| `?:`                                 | right to left    |
+| `= += -= *= /= %= &= ^= \|= <<= >>=` | right to left    |
+| `,`                                  | left to right    |
 
+**Unary & +, -, and * have higher precedence than the binary forms.**
 
+Note that the precedence of the bitwise operators &, ^, and | falls
+below == and !=.  This implies that bit-testing expressions like
 
+```c
+if ((x & MASK) == 0) ...
+```
 
-
-
-
-Chapter 6, along with sizeof (size of an object). Chapter 5 discusses * (indirection through a
-pointer) and & (address of an object), and Chapter 3 discusses the comma operator.
-
-Operators
-
-Associativity
-
-50
-
-() [] -> .
-
-! ~ ++ -- + - * (type) sizeof
-* / %
-+ -
-<<  >>
-< <= > >=
-== !=
-&
-^
-|
-&&
-||
-?:
-
- left to right
-
- right to left
-
- left to right
-
- left to right
-
- left to right
-
- left to right
-
- left to right
-
- left to right
-
- left to right
-
- left to right
-
- left to right
-
- left to right
-
- right to left
-
-= += -= *= /= %= &= ^= |= <<= >>=  right to left
-,
-
- left to right
-
-Unary & +, -, and * have higher precedence than the binary forms.
-
-Table 2.1: Precedence and Associativity of Operators
-
-Note  that  the  precedence  of  the  bitwise  operators  &,  ^,  and  |  falls  below  ==  and  !=.  This
-implies that bit-testing expressions like
-
-   if ((x & MASK) == 0) ...
 must be fully parenthesized to give proper results.
 
-C, like most languages, does not specify the order in which the operands of an operator are
-evaluated. (The exceptions are &&, ||, ?:, and `,'.) For example, in a statement like
+C, like most languages, does not specify the order in which the
+operands of an operator are evaluated. (The exceptions are &&, ||, ?:,
+and `,'.) For example, in a statement like
 
-   x = f() + g();
-f may be evaluated before g or vice versa; thus if either f or g alters a variable on which the
-other depends, x can depend on the order of evaluation. Intermediate results can be stored in
-temporary variables to ensure a particular sequence.
+```c
+x = f() + g();
+```
 
-Similarly,  the  order  in  which  function  arguments  are  evaluated  is  not  specified,  so  the
-statement
+f may be evaluated before g or vice versa; thus if either f or g
+alters a variable on which the other depends, x can depend on the
+order of evaluation. Intermediate results can be stored in temporary
+variables to ensure a particular sequence.
 
-   printf("%d %d\n", ++n, power(2, n));   /* WRONG */
-can produce different results with different compilers, depending on whether n is incremented
-before power is called. The solution, of course, is to write
+Similarly, the order in which function arguments are evaluated is not
+specified, so the statement
 
-   ++n;
+```c
+printf("%d %d\n", ++n, power(2, n));   /* WRONG */
+```
 
+can produce different results with different compilers, depending on
+whether n is incremented before power is called. The solution, of
+course, is to write
 
-   printf("%d %d\n", n, power(2, n));
-Function  calls,  nested  assignment  statements,  and  increment  and  decrement  operators  cause
-"side effects" - some variable is changed as a by-product of the evaluation of an expression.
-In  any  expression  involving  side  effects,  there  can  be  subtle  dependencies  on  the  order  in
-which variables taking part in the expression are updated. One unhappy situation is typified
-by the statement
+```c
+++n;
+printf("%d %d\n", n, power(2, n));
+```
 
-   a[i] = i++;
-The question is whether the subscript is the old value of i or the new. Compilers can interpret
-this in different ways, and generate different answers depending on their interpretation. The
-standard intentionally leaves most such matters unspecified. When side effects (assignment to
-variables) take place within an expression is left to the discretion of the compiler, since the
-best order depends strongly on machine architecture. (The standard does specify that all side
-effects on arguments take effect before a function is called, but that would not help in the call
-to printf above.)
+Function calls, nested assignment statements, and increment and
+decrement operators cause "side effects" - some variable is changed as
+a by-product of the evaluation of an expression.  In any expression
+involving side effects, there can be subtle dependencies on the order
+in which variables taking part in the expression are updated. One
+unhappy situation is typified by the statement
 
-The  moral  is  that  writing  code  that  depends  on  order  of  evaluation  is  a  bad  programming
-practice in any language. Naturally, it is necessary to know what things to avoid, but if you
-don't know how they are done on various machines, you won't be tempted to take advantage
-of a particular implementation.
+```c
+a[i] = i++;
+```
+
+The question is whether the subscript is the old value of i or the
+new. Compilers can interpret this in different ways, and generate
+different answers depending on their interpretation. The standard
+intentionally leaves most such matters unspecified. When side effects
+(assignment to variables) take place within an expression is left to
+the discretion of the compiler, since the best order depends strongly
+on machine architecture. (The standard does specify that all side
+effects on arguments take effect before a function is called, but that
+would not help in the call to printf above.)
+
+The moral is that writing code that depends on order of evaluation is
+a bad programming practice in any language. Naturally, it is necessary
+to know what things to avoid, but if you don't know how they are done
+on various machines, you won't be tempted to take advantage of a
+particular implementation.

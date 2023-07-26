@@ -2,7 +2,7 @@
   "kind": "Book",
   "title": "The C Programming Language",
   "subtitle": "ANSI C",
-  "authors": ["Brian W. Kernighan", "Dennis M. Ritchie"],
+  "authors": ["Dennis M. Ritchie", "Brian W. Kernighan"],
   "date": "1988",
   "src": "src",
   "contents": [
