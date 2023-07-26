@@ -105,319 +105,376 @@ various floating-point types.
 
 # 2.3 Constants
 
-An integer constant like 1234 is an int. A long constant is written with a terminal l (ell) or
-L, as in 123456789L; an integer constant too big to fit into an int will also be taken as a long.
-Unsigned  constants  are  written  with  a  terminal  u  or  U,  and  the  suffix  ul  or  UL  indicates
-unsigned long.
+An integer constant like `1234` is an `int`. A `long` constant is
+written with a terminal `l` (ell) or `L`, as in `123456789L`; an
+integer constant too big to fit into an `int` will also be taken as a
+`long`.  Unsigned constants are written with a terminal `u` or `U`,
+and the suffix `ul` or `UL` indicates `unsigned long`.
 
-Floating-point constants contain a decimal point (123.4) or an exponent (1e-2) or both; their
-type is double, unless suffixed. The suffixes f or F indicate a float constant; l or L indicate
-a long double.
+Floating-point constants contain a decimal point (`123.4`) or an
+exponent (`1e-2`) or both; their type is `double`, unless
+suffixed. The suffixes `f` or `F` indicate a `float` constant; `l` or
+`L` indicate a `long double`.
 
-The value of an integer can be specified in octal or hexadecimal instead of decimal. A leading
-0  (zero)  on  an  integer  constant  means  octal;  a  leading  0x  or  0X  means  hexadecimal.  For
-example,  decimal  31  can  be  written  as  037  in  octal  and  0x1f  or  0x1F  in  hex.  Octal  and
+The value of an integer can be specified in octal or hexadecimal
+instead of decimal. A leading `0` (zero) on an integer constant means
+octal; a leading `0x` or `0X` means hexadecimal.  For example, decimal
+31 can be written as `037` in octal and `0x1f` or `0x1F` in hex.
+Octal and hexadecimal constants may also be followed by `L` to make
+them `long` and `U` to make them `unsigned`: `0XFUL` is an `unsigned
+long` constant with value 15 decimal.
 
+A _character_ constant is an integer, written as one character within
+single quotes, such as `'x'`. The value of a character constant is the
+numeric value of the character in the machine's character set. For
+example, in the ASCII character set the character constant `'0'` has
+the value 48, which is unrelated to the numeric value `0`. If we write
+`'0'` instead of a numeric value like 48 that depends on the character
+set, the program is independent of the particular value and easier to
+read. Character constants participate in numeric operations just as
+any other integers, although they are most often used in comparisons
+with other characters.
 
+Certain characters can be represented in character and string
+constants by escape sequences like `\n` (newline); these sequences
+look like two characters, but represent only one.  In addition, an
+arbitrary byte-sized bit pattern can be specified by
 
+```c
+'\ooo'
+```
 
-37
+where _ooo_ is one to three octal digits (0...7) or by
 
-hexadecimal  constants  may  also  be  followed  by  L  to  make  them  long  and  U  to  make  them
-unsigned: 0XFUL is an unsigned long constant with value 15 decimal.
+```c
+'\xhh'
+```
 
-A character constant is an integer, written as one character within single quotes, such as
-'x'. The value of a character constant is the numeric value of the character in the machine's
-character set. For example, in the ASCII character set the character constant '0' has the value
-48, which is unrelated to the numeric value 0. If we write '0' instead of a numeric value like
-48 that depends on the character set, the program is independent of the particular value and
-easier to read. Character constants participate in numeric operations just as any other integers,
-although they are most often used in comparisons with other characters.
+where _hh_ is one or more hexadecimal digits (0...9, a...f, A...F).
+So we might write
 
-Certain characters can be represented in character and string constants by escape sequences
-like  \n  (newline);  these  sequences  look  like  two  characters,  but  represent  only  one.  In
-addition, an arbitrary byte-sized bit pattern can be specified by
+```c
+#define VTAB '\013'   /* ASCII vertical tab */
+#define BELL '\007'   /* ASCII bell character */
+```
 
-   '\ooo'
-where ooo is one to three octal digits (0...7) or by
-
-   '\xhh'
-where hh is one or more hexadecimal digits (0...9, a...f, A...F). So we might write
-
-   #define VTAB '\013'   /* ASCII vertical tab */
-   #define BELL '\007'   /* ASCII bell character */
 or, in hexadecimal,
 
-   #define VTAB '\xb'   /* ASCII vertical tab */
-   #define BELL '\x7'   /* ASCII bell character */
+```c
+#define VTAB '\xb'   /* ASCII vertical tab */
+#define BELL '\x7'   /* ASCII bell character */
+```
+
 The complete set of escape sequences is
 
- \?
+| char   | meaning                |
+|--------|------------------------|
+| `\a`   | alert (bell) character |
+| `\b`   | backspace              |
+| `\f`   | formfeed               |
+| `\n`   | newline                |
+| `\r`   | carriage return        |
+| `\t`   | horizontal tab         |
+| `\v`   | vertical tab           |
+| `\\`   | backslash              |
+| `\?`   | question mark          |
+| `\'`   | single quote           |
+| `\"`   | double quote           |
+| `\ooo` | octal number           |
+| `\xhh` | hexadecimal number     |
 
- \a   alert (bell) character   \\
- \b   backspace
- \f   formfeed
- \n   newline
- \r   carriage return
- \t   horizontal tab
- \v   vertical tab
+The character constant `'\0'` represents the character with value
+zero, the null character. `'\0'` is often written instead of `0` to
+emphasize the character nature of some expression, but the numeric
+value is just 0.
 
-  \'
+A _constant expression_ is an expression that involves only
+constants. Such expressions may be evaluated at during compilation
+rather than run-time, and accordingly may be used in any place that a
+constant can occur, as in
 
-  backslash
+```c
+#define MAXLINE 1000
+char line[MAXLINE+1];
+```
 
- question mark
-
- single quote
-
- double quote
-
- \"
- \ooo   octal number
- \xhh   hexadecimal number
-
-The character constant '\0' represents the character with value zero, the null character. '\0'
-is  often  written  instead  of  0  to  emphasize  the  character  nature  of  some  expression,  but  the
-numeric value is just 0.
-
-A constant expression is an expression that involves only constants. Such expressions may be
-evaluated  at  during  compilation  rather  than  run-time,  and  accordingly  may  be  used  in  any
-place that a constant can occur, as in
-
-   #define MAXLINE 1000
-   char line[MAXLINE+1];
 or
 
-   #define LEAP 1 /* in leap years */
-   int days[31+28+LEAP+31+30+31+30+31+31+30+31+30+31];
+```c
+#define LEAP 1 /* in leap years */
+int days[31+28+LEAP+31+30+31+30+31+31+30+31+30+31];
+```
 
+A _string constant_, or _string literal_, is a sequence of zero or
+more characters surrounded by double quotes, as in
 
+```c
+"I am a string"
+```
 
-
-
-
-
-
-
-
-
-A  string  constant,  or  string  literal,  is  a  sequence  of  zero  or  more  characters  surrounded  by
-double quotes, as in
-
-38
-
-   "I am a string"
 or
 
-   "" /* the empty string */
-The quotes are not part of the string, but serve only to delimit it. The same escape sequences
-used in character constants apply in strings; \" represents the double-quote character. String
-constants can be concatenated at compile time:
+```c
+"" /* the empty string */
+```
 
-   "hello, " "world"
+The quotes are not part of the string, but serve only to delimit
+it. The same escape sequences used in character constants apply in
+strings; `\"` represents the double-quote character. String constants
+can be concatenated at compile time:
+
+```c
+"hello, " "world"
+```
+
 is equivalent to
 
-   "hello, world"
+```c
+"hello, world"
+```
+
 This is useful for splitting up long strings across several source lines.
 
-Technically, a string constant is an array of characters. The internal representation of a string
-has  a  null  character  '\0'  at  the  end,  so  the  physical  storage  required  is  one  more  than  the
-number of characters written between the quotes. This representation means that there is no
-limit to how long a string can be, but programs must scan a string completely to determine its
-length.  The  standard  library  function  strlen(s)  returns  the  length  of  its  character  string
-argument s, excluding the terminal '\0'. Here is our version:
+Technically, a string constant is an array of characters. The internal
+representation of a string has a null character `'\0'` at the end, so
+the physical storage required is one more than the number of
+characters written between the quotes. This representation means that
+there is no limit to how long a string can be, but programs must scan
+a string completely to determine its length.  The standard library
+function `strlen(s)` returns the length of its character string
+argument `s`, excluding the terminal `'\0'`. Here is our version:
 
-   /* strlen:  return length of s */
-   int strlen(char s[])
-   {
-       int i;
+```c
+/* strlen:  return length of s */
+int strlen(char s[])
+{
+    int i;
 
-       while (s[i] != '\0')
-           ++i;
-       return i;
-   }
-strlen and other string functions are declared in the standard header <string.h>.
+    i = 0;
+    while (s[i] != '\0')
+        ++i;
+    return i;
+}
+```
 
-Be  careful  to  distinguish  between  a  character  constant  and  a  string  that  contains  a  single
-character: 'x' is not the same as "x". The former is an integer, used to produce the numeric
-value  of  the  letter  x  in  the  machine's  character  set.  The  latter  is  an  array  of  characters  that
-contains one character (the letter x) and a '\0'.
+`strlen` and other string functions are declared in the standard
+header `<string.h>`.
 
-There  is  one  other  kind  of  constant,  the  enumeration  constant.  An  enumeration  is  a  list  of
-constant integer values, as in
+Be careful to distinguish between a character constant and a string
+that contains a single character: `'x'` is not the same as `"x"`. The
+former is an integer, used to produce the numeric value of the letter
+x in the machine's character set.  The latter is an array of
+characters that contains one character (the letter x) and a `'\0'`.
 
-   enum boolean { NO, YES };
-The  first  name  in  an  enum  has  value  0,  the  next  1,  and  so  on,  unless  explicit  values  are
-specified. If not all values are specified, unspecified values continue the progression from the
-last specified value, as the second of these examples:
+There is one other kind of constant, the _enumeration constant_.
+An enumeration is a list of constant integer values, as in
 
-   enum escapes { BELL = '\a', BACKSPACE = '\b', TAB = '\t',
-                  NEWLINE = '\n', VTAB = '\v', RETURN = '\r' };
+```c
+enum boolean { NO, YES };
+```
 
-   enum months { JAN = 1, FEB, MAR, APR, MAY, JUN,
-                 JUL, AUG, SEP, OCT, NOV, DEC };
-                       /* FEB = 2, MAR = 3, etc. */
+The first name in an enum has value 0, the next 1, and so on, unless
+explicit values are specified. If not all values are specified,
+unspecified values continue the progression from the last specified
+value, as the second of these examples:
 
+```c
+enum escapes { BELL = '\a', BACKSPACE = '\b', TAB = '\t',
+               NEWLINE = '\n', VTAB = '\v', RETURN = '\r' };
 
+enum months { JAN = 1, FEB, MAR, APR, MAY, JUN,
+              JUL, AUG, SEP, OCT, NOV, DEC };
+                    /* FEB = 2, MAR = 3, etc. */
+```
 
+Names in different enumerations must be distinct.  Values need not be
+distinct in the same enumeration.
 
-
-
-
-
-
-
-
-
-39
-
-Names  in  different  enumerations  must  be  distinct.  Values  need  not  be  distinct  in  the  same
-enumeration.
-
-Enumerations  provide  a  convenient  way  to  associate  constant  values  with  names,  an
-alternative to #define with the advantage that the values can be generated for you. Although
-variables  of  enum  types  may  be  declared,  compilers  need  not  check  that  what  you  store  in
-such a variable is a valid value for the enumeration. Nevertheless, enumeration variables offer
-the chance of checking and so are often better than #defines. In addition, a debugger may be
-able to print values of enumeration variables in their symbolic form.
+Enumerations provide a convenient way to associate constant values
+with names, an alternative to `#define` with the advantage that the
+values can be generated for you. Although variables of `enum` types
+may be declared, compilers need not check that what you store in such
+a variable is a valid value for the enumeration. Nevertheless,
+enumeration variables offer the chance of checking and so are often
+better than `#define`s. In addition, a debugger may be able to print
+values of enumeration variables in their symbolic form.
 
 # 2.4 Declarations
 
-All  variables  must  be  declared  before  use,  although  certain  declarations  can  be  made
-implicitly  by  content.  A  declaration  specifies  a  type,  and  contains  a  list  of  one  or  more
-variables of that type, as in
+All variables must be declared before use, although certain
+declarations can be made implicitly by content.  A declaration
+specifies a type, and contains a list of one or more variables of that
+type, as in
 
-   int  lower, upper, step;
-   char c, line[1000];
-Variables can be distributed among declarations in any fashion; the lists above could well be
-written as
+```c
+int  lower, upper, step;
+char c, line[1000];
+```
 
-   int  lower;
-   int  upper;
-   int  step;
-   char c;
-   char line[1000];
-The latter form takes more space, but is convenient for adding a comment to each declaration
-for subsequent modifications.
+Variables can be distributed among declarations in any fashion; the
+lists above could well be written as
 
-A variable may also be initialized in its declaration. If the name is followed by an equals sign
-and an expression, the expression serves as an initializer, as in
+```c
+int  lower;
+int  upper;
+int  step;
+char c;
+char line[1000];
+```
 
-   char  esc = '\\';
-   int   i = 0;
-   int   limit = MAXLINE+1;
-   float eps = 1.0e-5;
-If the variable in question is not automatic, the initialization is done once only, conceptionally
-before  the  program  starts  executing,  and  the  initializer  must  be  a  constant  expression.  An
-explicitly initialized automatic variable is initialized each time the function or block it is in is
-entered; the initializer may be any expression. External and static variables are initialized to
-zero by default. Automatic variables for which is no explicit initializer have undefined (i.e.,
-garbage) values.
+The latter form takes more space, but is convenient for adding a
+comment to each declaration for subsequent modifications.
 
-The qualifier const can be applied to the declaration of any variable to specify that its value
-will  not  be  changed.  For  an  array,  the  const  qualifier  says  that  the  elements  will  not  be
-altered.
+A variable may also be initialized in its declaration. If the name is
+followed by an equals sign and an expression, the expression serves as
+an initializer, as in
 
-   const double e = 2.71828182845905;
-   const char msg[] = "warning: ";
-The  const  declaration  can  also  be  used  with  array  arguments,  to  indicate  that  the  function
-does not change that array:
+```c
+char  esc = '\\';
+int   i = 0;
+int   limit = MAXLINE+1;
+float eps = 1.0e-5;
+```
 
-   int strlen(const char[]);
+If the variable in question is not automatic, the initialization is
+done once only, conceptionally before the program starts executing,
+and the initializer must be a constant expression.  An explicitly
+initialized automatic variable is initialized each time the function
+or block it is in is entered; the initializer may be any
+expression. External and static variables are initialized to zero by
+default. Automatic variables for which is no explicit initializer have
+undefined (i.e., garbage) values.
 
+The qualifier `const` can be applied to the declaration of any
+variable to specify that its value will not be changed.  For an array,
+the `const` qualifier says that the elements will not be altered.
 
+```c
+const double e = 2.71828182845905;
+const char msg[] = "warning: ";
+```
 
+The `const` declaration can also be used with array arguments,
+to indicate that the function does not change that array:
 
+```c
+int strlen(const char[]);
+```
 
-
-
-
-40
-
-The result is implementation-defined if an attempt is made to change a const.
+The result is implementation-defined if an attempt is made to change a `const`.
 
 # 2.5 Arithmetic Operators
 
-The  binary  arithmetic  operators  are  +,  -,  *,  /,  and  the  modulus  operator  %.  Integer  division
-truncates any fractional part. The expression
+The binary arithmetic operators are `+`, `-`, `*`, `/`, and the
+modulus operator `%`.  Integer division truncates any fractional
+part. The expression
 
-   x % y
-produces the remainder when x is divided by y, and thus is zero when y divides x exactly. For
-example, a year is a leap year if it is divisible by 4 but not by 100, except that years divisible
-by 400 are leap years. Therefore
+```c
+x % y
+```
 
-   if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
-       printf("%d is a leap year\n", year);
-   else
-       printf("%d is not a leap year\n", year);
-The % operator cannot be applied to a float or double. The direction of truncation for / and
-the sign of the result for % are machine-dependent for negative operands, as is the action taken
-on overflow or underflow.
+produces the remainder when `x` is divided by `y`, and thus is zero
+when `y` divides `x` exactly. For example, a year is a leap year if it
+is divisible by 4 but not by 100, except that years divisible by 400
+are leap years. Therefore
 
-The binary + and - operators have the same precedence, which is lower than the precedence
-of *, / and %, which is in turn lower than unary + and -. Arithmetic operators associate left to
-right.
+```c
+if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+    printf("%d is a leap year\n", year);
+else
+    printf("%d is not a leap year\n", year);
+```
 
-Table 2.1 at the end of this chapter summarizes precedence and associativity for all operators.
+The `%` operator cannot be applied to a `float` or `double`. The
+direction of truncation for `/` and the sign of the result for `%` are
+machine-dependent for negative operands, as is the action taken on
+overflow or underflow.
+
+The binary `+` and `-` operators have the same precedence, which is
+lower than the precedence of `*`, `/` and `%`, which is in turn lower
+than unary `+` and `-`. Arithmetic operators associate left to right.
+
+Table 2-1 at the end of this chapter summarizes precedence and
+associativity for all operators.
 
 # 2.6 Relational and Logical Operators
 
 The relational operators are
 
-   >   >=   <   <=
-They all have the same precedence. Just below them in precedence are the equality operators:
+```
+>   >=   <   <=
+```
 
-   ==   !=
-Relational operators have lower precedence than arithmetic operators, so an expression like i
-< lim-1 is taken as i < (lim-1), as would be expected.
+They all have the same precedence. Just below them in precedence are
+the equality operators:
 
-More interesting are the logical operators && and ||. Expressions connected by && or || are
-evaluated left to right, and evaluation stops as soon as the truth or falsehood of the result is
-known. Most C programs rely on these properties. For example, here is a loop from the input
-function getline that we wrote in Chapter 1:
+```
+==   !=
+```
 
-   for (i=0; i < lim-1 && (c=getchar()) != '\n' && c != EOF; ++i)
-       s[i] = c;
-Before  reading  a  new  character  it  is  necessary  to  check  that  there  is  room  to  store  it  in  the
-array s, so the test i < lim-1 must be made first. Moreover, if this test fails, we must not go
-on and read another character.
+Relational operators have lower precedence than arithmetic operators,
+so an expression like `i < lim-1` is taken as `i < (lim-1)`, as would be
+expected.
 
-Similarly,  it  would  be  unfortunate  if  c  were  tested  against  EOF  before  getchar  is  called;
-therefore the call and assignment must occur before the character in c is tested.
+More interesting are the logical operators `&&` and `||`. Expressions
+connected by `&&` or `||` are evaluated left to right, and evaluation
+stops as soon as the truth or falsehood of the result is known. Most C
+programs rely on these properties. For example, here is a loop from
+the input function `getline` that we wrote in Chapter 1:
 
+```c
+for (i=0; i < lim-1 && (c=getchar()) != '\n' && c != EOF; ++i)
+    s[i] = c;
+```
 
+Before reading a new character it is necessary to check that there is
+room to store it in the array `s`, so the test `i < lim-1` _must_ be
+made first. Moreover, if this test fails, we must not go on and read
+another character.
 
+Similarly, it would be unfortunate if `c` were tested against `EOF`
+before `getchar` is called; therefore the call and assignment must
+occur before the character in `c` is tested.
 
+The precedence of `&&` is higher than that of `||`, and both are lower
+than relational and equality operators, so expressions like
 
+```c
+i < lim-1 && (c=getchar()) != '\n' && c != EOF
+```
 
+need no extra parentheses.  But since the precedence of `!=` is higher
+than assignment, parentheses are needed in
 
+```c
+(c=getchar()) != '\n'
+```
 
-The precedence of && is higher than that of ||, and both are lower than relational and equality
-operators, so expressions like
+to achieve the desired result of assignment to `c` and then comparison
+with `'\n'`.
 
-41
+By definition, the numeric value of a relational or logical expression
+is 1 if the relation is true, and 0 if the relation is false.
 
-   i < lim-1 && (c=getchar()) != '\n' && c != EOF
-need  no  extra  parentheses.  But  since  the  precedence  of  !=  is  higher  than  assignment,
-parentheses are needed in
+The unary negation operator `!` converts a non-zero operand into 0,
+and a zero operand in 1. A common use of `!` is in constructions like
 
-   (c=getchar()) != '\n'
-to achieve the desired result of assignment to c and then comparison with '\n'.
+```c
+if (!valid)
+```
 
-By definition, the numeric value of a relational or logical expression is 1 if the relation is true,
-and 0 if the relation is false.
-
-The unary negation operator ! converts a non-zero operand into 0, and a zero operand in 1. A
-common use of ! is in constructions like
-
-   if (!valid)
 rather than
 
-   if (valid == 0)
-It's hard to generalize about which form is better. Constructions like !valid read nicely ("if
-not valid"), but more complicated ones can be hard to understand.
+```c
+if (valid == 0)
+```
 
-Exercise 2-2. Write a loop equivalent to the for loop above without using && or ||.
+It's hard to generalize about which form is better. Constructions like
+`!valid` read nicely ("if not valid"), but more complicated ones can
+be hard to understand.
+
+**Exercise 2-2**. Write a loop equivalent to the `for` loop above
+without using `&&` or `||`.
 
 # 2.7 Type Conversions
 
@@ -455,7 +512,7 @@ As we discussed in Chapter 1, the expression
 
 
 
-    s[i] - '0'
+    s[i] - '0'
 gives the numeric value of the character stored in s[i], because the values of '0', '1', etc.,
 form a contiguous increasing sequence.
 
@@ -515,7 +572,7 @@ this makes no difference.
 
 
 
-Implicit arithmetic conversions work much as expected. In general, if an operator like + or *
+Implicit arithmetic conversions work much as expected. In general, if an operator like + or *
 that takes two operands (a binary operator) has operands of different types, the "lower" type
 is  promoted  to  the  "higher"  type  before  the  operation  proceeds.  The  result  is  of  the  integer
 type. Section 6 of Appendix A states the conversion rules precisely. If there are no unsigned
@@ -575,7 +632,7 @@ operator called a cast. In the construction
 
 
 
-  (type name) expression
+  (type name) expression
 
 the  expression  is  converted  to  the  named  type  by  the  conversion  rules  above.  The  precise
 meaning  of  a  cast  is  as  if  the  expression  were  assigned  to  a  variable  of  the  specified  type,
@@ -639,7 +696,7 @@ have frequently used ++ to increment variables, as in
 
 
 
-The  unusual  aspect  is  that  ++  and  --  may  be  used  either  as  prefix  operators  (before  the
+The  unusual  aspect  is  that  ++  and  --  may  be  used  either  as  prefix  operators  (before  the
 variable, as in ++n), or postfix operators (after the variable: n++). In both cases, the effect is to
 increment  n.  But  the  expression  ++n  increments  n  before  its  value  is  used,  while  n++
 increments  n  after  its  value  has  been  used.  This  means  that  in  a  context  where  the  value  is
@@ -698,19 +755,6 @@ returns a pointer to the resulting string.
    /* strcat:  concatenate t to end of s; s must be big enough */
    void strcat(char s[], char t[])
    {
-
-
-
-
-
-
-
-
-
-
-
-
-46
 
        int i, j;
 
@@ -776,7 +820,7 @@ of bit positions given by the right operand, which must be non-negative. Thus x 
 
 
 
-the  value  of  x  by  two  positions,  filling  vacated  bits  with  zero;  this  is  equivalent  to
+the  value  of  x  by  two  positions,  filling  vacated  bits  with  zero;  this  is  equivalent  to
 multiplication  by  4.  Right  shifting  an  unsigned  quantity  always  fits  the  vacated  bits  with
 zero.  Right  shifting  a  signed  quantity  will  fill  with  bit  signs  ("arithmetic  shift")  on  some
 machines and with 0-bits ("logical shift") on others.
@@ -784,7 +828,6 @@ machines and with 0-bits ("logical shift") on others.
 The unary operator ~ yields the one's complement of an integer; that is, it converts each 1-bit
 into a 0-bit and vice versa. For example
 
-47
 
    x = x & ~077
 sets the last six bits of  x to zero. Note that  x  &  ~077 is independent of word length, and is
@@ -829,13 +872,6 @@ The operator += is called an assignment operator.
 Most  binary  operators  (operators  like  +  that  have  a  left  and  right  operand)  have  a
 corresponding assignment operator op=, where op is one of
 
-
-
-
-
-
-
-48
 
    +   -   *   /   %   <<   >>   &   ^   |
 If expr1 and expr2 are expressions, then
@@ -967,7 +1003,7 @@ call. The operators -> and . are used to access members of structures; they will
 
 
 
-Chapter 6, along with sizeof (size of an object). Chapter 5 discusses * (indirection through a
+Chapter 6, along with sizeof (size of an object). Chapter 5 discusses * (indirection through a
 pointer) and & (address of an object), and Chapter 3 discusses the comma operator.
 
 Operators
@@ -1049,13 +1085,6 @@ before power is called. The solution, of course, is to write
 
    ++n;
 
-
-
-
-
-
-
-51
 
    printf("%d %d\n", n, power(2, n));
 Function  calls,  nested  assignment  statements,  and  increment  and  decrement  operators  cause
