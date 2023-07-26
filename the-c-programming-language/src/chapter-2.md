@@ -3,96 +3,107 @@ title: Chapter 2
 subtitle: Types, Operators and Expressions
 ---
 
-Variables and constants are the basic data objects manipulated in a program. Declarations list
-the variables to be used, and state what type they have and perhaps what their initial values
-are.  Operators  specify  what  is  to  be  done  to  them.  Expressions  combine  variables  and
-constants  to  produce  new  values.  The  type  of  an  object  determines  the  set  of  values  it  can
-have and what operations can be performed on it. These building blocks are the topics of this
-chapter.
+Variables and constants are the basic data objects manipulated in a
+program. Declarations list the variables to be used, and state what
+type they have and perhaps what their initial values are.  Operators
+specify what is to be done to them.  Expressions combine variables and
+constants to produce new values.  The type of an object determines the
+set of values it can have and what operations can be performed on
+it. These building blocks are the topics of this chapter.
 
-The  ANSI  standard  has  made  many  small  changes  and  additions  to  basic  types  and
-expressions. There are now signed and unsigned forms of all integer types, and notations for
-unsigned  constants  and  hexadecimal  character  constants.  Floating-point  operations  may  be
-done  in  single  precision;  there  is  also  a  long  double  type  for  extended  precision.  String
-constants  may  be  concatenated  at  compile  time.  Enumerations  have  become  part  of  the
-language,  formalizing  a  feature  of  long  standing.  Objects  may  be  declared  const,  which
-prevents them from being changed. The rules for automatic coercions among arithmetic types
-have been augmented to handle the richer set of types.
+The ANSI standard has made many small changes and additions to basic
+types and expressions. There are now `signed` and `unsigned` forms of
+all integer types, and notations for unsigned constants and
+hexadecimal character constants.  Floating-point operations may be
+done in single precision; there is also a `long double` type for
+extended precision.  String constants may be concatenated at compile
+time.  Enumerations have become part of the language, formalizing a
+feature of long standing.  Objects may be declared `const`, which
+prevents them from being changed. The rules for automatic coercions
+among arithmetic types have been augmented to handle the richer set of
+types.
 
-2.1 Variable Names
+# 2.1 Variable Names
 
-Although we didn't say so in Chapter 1, there are some restrictions on the names of variables
-and symbolic constants. Names are made up of letters and digits; the first character must be a
-letter.  The  underscore  "_"  counts  as  a  letter;  it  is  sometimes  useful  for  improving  the
-readability  of  long  variable  names.  Don't  begin  variable  names  with  underscore,  however,
-since library routines often use such names. Upper and lower case letters are distinct, so x and
-X are two different names. Traditional C practice is to use lower case for variable names, and
-all upper case for symbolic constants.
+Although we didn't say so in Chapter 1, there are some restrictions on
+the names of variables and symbolic constants. Names are made up of
+letters and digits; the first character must be a letter.  The
+underscore "_" counts as a letter; it is sometimes useful for
+improving the readability of long variable names.  Don't begin
+variable names with underscore, however, since library routines often
+use such names. Upper and lower case letters are distinct, so x and X
+are two different names. Traditional C practice is to use lower case
+for variable names, and all upper case for symbolic constants.
 
-At  least  the  first  31  characters  of  an  internal  name  are  significant.  For  function  names  and
-external variables, the number may be less than 31, because external names may be used by
-assemblers  and  loaders  over  which  the  language  has  no  control.  For  external  names,  the
-standard  guarantees  uniqueness  only  for  6  characters  and  a  single  case.  Keywords  like  if,
-else, int, float, etc., are reserved: you can't use them as variable names. They must be in
-lower case.
+At least the first 31 characters of an internal name are significant.
+For function names and external variables, the number may be less than
+31, because external names may be used by assemblers and loaders over
+which the language has no control.  For external names, the standard
+guarantees uniqueness only for 6 characters and a single case.
+Keywords like `if`, `else`, `int`, `float`, etc., are reserved: you
+can't use them as variable names. They must be in lower case.
 
-It's wise to choose variable names that are related to the purpose of the variable, and that are
-unlikely  to  get  mixed  up  typographically.  We  tend  to  use  short  names  for  local  variables,
-especially loop indices, and longer names for external variables.
+It's wise to choose variable names that are related to the purpose of
+the variable, and that are unlikely to get mixed up typographically.
+We tend to use short names for local variables, especially loop
+indices, and longer names for external variables.
 
-2.2 Data Types and Sizes
+# 2.2 Data Types and Sizes
 
 There are only a few basic data types in C:
 
-a single byte, capable of holding one character in the local character set
+| type     | meaning                                                                           |
+|----------|-----------------------------------------------------------------------------------|
+| `char`   | a single byte, capable of holding one character in the local character set        |
+| `int`    | an integer, typically reflecting the natural size of integers on the host machine |
+| `float`  | single-precision floating point                                                   |
+| `double` | double-precision floating point                                                   |
 
-an integer, typically reflecting the natural size of integers on the host machine
+In addition, there are a number of qualifiers that can be applied to
+these basic types.  `short` and `long` apply to integers:
 
-char
-int
-float  single-precision floating point
+```c
+short int sh;
+long int counter;
+```
 
+The word `int` can be omitted in such declarations,
+and typically it is.
 
+The intent is that `short` and `long` should provide different lengths
+of integers where practical; `int` will normally be the natural size
+for a particular machine. `short` is often 16 bits, `long`, and `int`
+either 16 or 32 bits.  Each compiler is free to choose appropriate
+sizes for its own hardware, subject only to the the restriction that
+`short`s and `int`s are at least 16 bits, `long`s are at least 32
+bits, and `short` is no longer than `int`, which is no longer than
+`long`.
 
+The qualifier `signed` or `unsigned` may be applied to `char` or any
+integer. unsigned numbers are always positive or zero, and obey the
+laws of arithmetic modulo 2^n, where n is the number of bits in the
+type. So, for instance, if `char`s are 8 bits, `unsigned char`
+variables have values between 0 and 255, while `signed char`s have
+values between -128 and 127 (in a two's complement machine.)  Whether
+plain `char`s are signed or unsigned is machine-dependent, but
+printable characters are always positive.
 
-36
-
-double  double-precision floating point
-
-In addition, there are a number of qualifiers that can be applied to these basic types.  short
-and long apply to integers:
-
-   short int sh;
-   long int counter;
-The word int can be omitted in such declarations, and typically it is.
-
-The intent is that short and long should provide different lengths of integers where practical;
-int will normally be the natural size for a particular machine. short is often 16 bits long, and
-int  either  16  or  32  bits.  Each  compiler  is  free  to  choose  appropriate  sizes  for  its  own
-hardware, subject only to the the restriction that shorts and ints are at least 16 bits, longs are
-at least 32 bits, and short is no longer than int, which is no longer than long.
-
-The qualifier signed or unsigned may be applied to char or any integer. unsigned numbers
-are always positive or zero, and obey the laws of arithmetic modulo 2n, where n is the number
-of bits in the type. So, for instance, if chars are 8 bits, unsigned char variables have values
-between  0  and  255,  while  signed  chars  have  values  between  -128  and  127  (in  a  two's
-complement  machine.)  Whether  plain  chars  are  signed  or  unsigned  is  machine-dependent,
-but printable characters are always positive.
-
-The type long double specifies extended-precision floating point. As with integers, the sizes
-of floating-point objects are implementation-defined; float, double and long double could
+The type `long double` specifies extended-precision floating point. As
+with integers, the sizes of floating-point objects are
+implementation-defined; `float`, `double` and `long double` could
 represent one, two or three distinct sizes.
 
-The standard headers <limits.h> and <float.h> contain symbolic constants for all of these
-sizes,  along  with  other  properties  of  the  machine  and  compiler.  These  are  discussed  in
-Appendix B.
+The standard headers `<limits.h>` and `<float.h>` contain symbolic
+constants for all of these sizes, along with other properties of the
+machine and compiler.  These are discussed in Appendix B.
 
-Exercise  2-1.  Write  a  program  to  determine  the  ranges  of  char,  short,  int,  and  long
-variables, both  signed and  unsigned, by printing appropriate values from standard headers
-and by direct computation. Harder if you compute them: determine the ranges of the various
-floating-point types.
+**Exercise 2-1**.  Write a program to determine the ranges of `char`,
+`short`, `int`, and `long` variables, both `signed` and `unsigned`, by
+printing appropriate values from standard headers and by direct
+computation. Harder if you compute them: determine the ranges of the
+various floating-point types.
 
-2.3 Constants
+# 2.3 Constants
 
 An integer constant like 1234 is an int. A long constant is written with a terminal l (ell) or
 L, as in 123456789L; an integer constant too big to fit into an int will also be taken as a long.
@@ -270,7 +281,7 @@ such a variable is a valid value for the enumeration. Nevertheless, enumeration 
 the chance of checking and so are often better than #defines. In addition, a debugger may be
 able to print values of enumeration variables in their symbolic form.
 
-2.4 Declarations
+# 2.4 Declarations
 
 All  variables  must  be  declared  before  use,  although  certain  declarations  can  be  made
 implicitly  by  content.  A  declaration  specifies  a  type,  and  contains  a  list  of  one  or  more
@@ -325,7 +336,7 @@ does not change that array:
 
 The result is implementation-defined if an attempt is made to change a const.
 
-2.5 Arithmetic Operators
+# 2.5 Arithmetic Operators
 
 The  binary  arithmetic  operators  are  +,  -,  *,  /,  and  the  modulus  operator  %.  Integer  division
 truncates any fractional part. The expression
@@ -349,7 +360,7 @@ right.
 
 Table 2.1 at the end of this chapter summarizes precedence and associativity for all operators.
 
-2.6 Relational and Logical Operators
+# 2.6 Relational and Logical Operators
 
 The relational operators are
 
@@ -408,7 +419,7 @@ not valid"), but more complicated ones can be hard to understand.
 
 Exercise 2-2. Write a loop equivalent to the for loop above without using && or ||.
 
-2.7 Type Conversions
+# 2.7 Type Conversions
 
 When  an  operator  has  operands  of  different  types,  they  are  converted  to  a  common  type
 according to a small number of rules. In general, the only automatic conversions are those that
@@ -610,7 +621,7 @@ Exercise  2-3.  Write  a  function  htoi(s),  which  converts  a  string  of  he
 (including an optional 0x or  0X) into its equivalent integer value. The allowable digits are 0
 through 9, a through f, and A through F.
 
-2.8 Increment and Decrement Operators
+# 2.8 Increment and Decrement Operators
 
 C  provides  two  unusual  operators  for  incrementing  and  decrementing  variables.  The
 increment operator ++ adds 1 to its operand, while the decrement operator -- subtracts 1. We
@@ -720,7 +731,7 @@ where  any  character  from  the  string  s2  occurs,  or  -1  if  s1  contains 
 (The  standard  library  function  strpbrk  does  the  same  job  but  returns  a  pointer  to  the
 location.)
 
-2.9 Bitwise Operators
+# 2.9 Bitwise Operators
 
 C provides six operators for bit manipulation; these may only be applied to integral operands,
 that is, char, short, int, and long, whether signed or unsigned.
@@ -804,7 +815,7 @@ position p inverted (i.e., 1 changed into 0 and vice versa), leaving the others 
 Exercise 2-8. Write a function rightrot(x,n) that returns the value of the integer x rotated
 to the right by n positions.
 
-2.10 Assignment Operators and Expressions
+# 2.10 Assignment Operators and Expressions
 
 An expression such as
 
@@ -893,9 +904,9 @@ in x. Explain why. Use this observation to write a faster version of bitcount.
 
 
 
-49
 
-2.11 Conditional Expressions
+
+# 2.11 Conditional Expressions
 
 The statements
 
@@ -940,7 +951,7 @@ else. Another good example is
 Exercise 2-10. Rewrite the function lower, which converts upper case letters to lower case,
 with a conditional expression instead of if-else.
 
-2.12 Precedence and Order of Evaluation
+# 2.12 Precedence and Order of Evaluation
 
 Table  2.1  summarizes  the  rules  for  precedence  and  associativity  of  all  operators,  including
 those that we have not yet discussed. Operators on the same line have the same precedence;

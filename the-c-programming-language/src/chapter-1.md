@@ -1536,7 +1536,7 @@ int getline(char s[], int lim);
 which specifies that the first argument, `s`, is an array, and the
 second, `lim`, is an integer. The purpose of supplying the size of an
 array in a declaration is to set aside storage. The length of an array
-s is not necessary in `getline` since its size is set in
+`s` is not necessary in `getline` since its size is set in
 `main`. `getline` uses `return` to send a value back to the caller,
 just as the function `power` did.  This line also declares that
 `getline` returns an `int`; since `int` is the default return type, it
