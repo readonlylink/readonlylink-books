@@ -1,6 +1,7 @@
 ---
 title: grasping with the hand and mind
 author: otl aicher
+date: 1987
 ---
 
 the relationship between thinking and body is so close that what
