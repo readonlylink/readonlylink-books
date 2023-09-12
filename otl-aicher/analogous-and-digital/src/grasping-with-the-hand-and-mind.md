@@ -226,8 +226,8 @@ experience of one's own doing, from personal intervention. people are
 abandoning general programmes to realize themselves.  they are giving
 up abstract idealism and looking for determination within
 themselves. the more precisely and perfectly industry works, the more
-people are looking for work that they produce themselves, inde-
-pendently of perfection.
+people are looking for work that they produce themselves,
+independently of perfection.
 
 it is precisely those people who see rationality as a virtue who
 employ it again in the physical ﬁeld of relationship of seeing and

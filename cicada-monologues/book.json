@@ -1,0 +1,16 @@
+{
+  "kind": "Book",
+  "title": "蝉语独白",
+  "subtitle": "Cicada Monologues",
+  "version": "0.0.2",
+  "authors": ["谢宇恒"],
+  "date": "2021",
+  "src": "src",
+  "contents": [
+    "00.0-dedication.md",
+    "00.2-preface.md",
+    "01-nat.md",
+    "99.1-appendix-syntax-design.md",
+    "99.2-appendix-glossary.md"
+  ]
+}
