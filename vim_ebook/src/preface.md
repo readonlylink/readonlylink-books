@@ -1,7 +1,7 @@
 
 # O EDITOR DE TEXTO VIM
 
-![Logo Vim](../docs/imgs/vimlogo.png "logo vim")
+![Logo Vim](https://vimbook.site/imgs/vimlogo.png "logo vim")
 
 [ [READONLY.LINK](https://readonly.link/books/https://books.readonly.link/the-c-programming-language/book.json)
 
