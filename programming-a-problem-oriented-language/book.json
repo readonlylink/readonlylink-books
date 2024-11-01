@@ -1,0 +1,19 @@
+{
+  "kind": "Book",
+  "title": "PROGRAMMING A PROBLEM-ORIENTED-LANGUAGE",
+  "authors": ["Charles H. Moore"],
+  "date": "1970",
+  "src": "src",
+  "contents": [
+    "0-preface.md",
+    "1-introduction.md",
+    "2-programs-without-input.md",
+    "3-programs-with-input.md",
+    "4-programs-that-grow.md",
+    "5-programs-with-memory.md",
+    "6-programs-with-output.md",
+    "7-programs-that-share.md",
+    "8-programs-that-think.md",
+    "9-programs-that-bootstrap.md"
+  ]
+}
